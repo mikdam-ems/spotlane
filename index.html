@@ -31,7 +31,7 @@
       --dim: #94A3B8;
       --line: #E2E8F0;
       --panel-w: 380px;
-      --shadow: 0 18px 40px -18px rgba(15, 23, 42, .28), 0 2px 8px rgba(15, 23, 42, .06);
+      --shadow: none;
       --ease: cubic-bezier(.2, .8, .2, 1);
     }
     html, body { height: 100%; }
@@ -51,7 +51,7 @@
       background: var(--glass);
       -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
       border: 1px solid var(--glass-line); border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      box-shadow: none;
     }
 
     /* ---------- App shell ---------- */
@@ -74,8 +74,8 @@
     .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; padding-right: 6px; flex: none; }
     .brand-mark {
       width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
-      background: linear-gradient(140deg, #6366F1, #4338CA); color: #fff; font-weight: 800; font-size: 18px;
-      box-shadow: 0 8px 18px -8px rgba(79, 70, 229, .8), inset 0 1px 0 rgba(255,255,255,.3);
+      background: var(--indigo); color: #fff; font-weight: 800; font-size: 18px;
+      box-shadow: none;
     }
     .brand b { font-size: 16px; letter-spacing: -.02em; }
     .brand small { display: block; color: var(--mute); font-size: 11px; font-weight: 500; }
@@ -89,7 +89,7 @@
       transition: border-color .2s, box-shadow .2s;
     }
     .fields .field { flex: 1 1 0; max-width: 300px; }
-    .field:focus-within { border-color: #A5B4FC; box-shadow: 0 0 0 4px rgba(79, 70, 229, .12); }
+    .field:focus-within { border-color: #A5B4FC; box-shadow: none; }
     .field svg.i { color: var(--indigo); }
     .field .fl { display: grid; min-width: 0; flex: 1; }
     .field small { font-size: 11px; color: var(--mute); font-weight: 500; line-height: 1.2; }
@@ -102,26 +102,14 @@
     .field .chev { width: 14px; height: 14px; color: var(--dim); }
     .when .field { width: 150px; }
 
-    .amen { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; margin: -2px; }
-    .amen::-webkit-scrollbar { display: none; }
-    .pill { position: relative; flex: none; }
-    .pill input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-    .pill span {
       display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 8px;
       border-radius: 999px; border: 1px solid var(--line); background: #fff;
       font-weight: 600; font-size: 13px; color: var(--ink-2); white-space: nowrap;
       transition: background .2s, border-color .2s, color .2s;
     }
-    .pill .box {
       width: 20px; height: 20px; border-radius: 7px; display: grid; place-items: center;
       border: 1.5px solid #CBD5E1; background: #fff; transition: inherit; padding: 0;
     }
-    .pill .box svg { width: 12px; height: 12px; stroke-width: 3; opacity: 0; transform: scale(.5); transition: .2s var(--ease); }
-    .pill input:checked + span { background: var(--indigo-soft); border-color: #C7D2FE; color: #3730A3; }
-    .pill input:checked + span .box { background: var(--indigo); border-color: var(--indigo); color: #fff; }
-    .pill input:checked + span .box svg { opacity: 1; transform: none; }
-    .pill input:focus-visible + span { outline: 2px solid var(--indigo); outline-offset: 2px; }
-    .pill:hover span { border-color: #C7D2FE; }
 
     /* ---------- Body row / result panel ---------- */
     .row { flex: 1; min-height: 0; display: flex; pointer-events: none; padding-bottom: 46px; }
@@ -131,14 +119,14 @@
     }
     .panel-head { padding: 18px 18px 12px; border-bottom: 1px solid var(--line); }
     .live { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #047857; background: #ECFDF5; border-radius: 999px; padding: 4px 9px 4px 7px; }
-    .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(16,185,129,.6); animation: ping 1.8s infinite; }
-    @keyframes ping { 70% { box-shadow: 0 0 0 7px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
+    .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: none; animation: ping 1.8s infinite; }
+    @keyframes ping { 70% { box-shadow: none; } 100% { box-shadow: none; } }
     .panel-head h1 { margin: 10px 0 4px; font-size: 20px; line-height: 1.25; letter-spacing: -.02em; }
     .panel-head h1 em { font-style: normal; color: var(--indigo); }
     .panel-head p { margin: 0; color: var(--mute); font-size: 12.5px; }
     .seg { margin-top: 14px; display: grid; grid-template-columns: repeat(3, 1fr); background: #F1F5F9; border-radius: 12px; padding: 3px; }
     .seg button { border: 0; background: transparent; height: 30px; border-radius: 9px; font-size: 12.5px; font-weight: 600; color: var(--mute); }
-    .seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(15,23,42,.12); }
+    .seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: none; }
 
     .list { overflow-y: auto; padding: 12px; display: grid; gap: 10px; align-content: start; scrollbar-width: thin; }
     .lot {
@@ -146,13 +134,13 @@
       display: grid; gap: 10px; cursor: pointer;
       transition: border-color .2s, box-shadow .25s, transform .25s var(--ease);
     }
-    .lot:hover { border-color: #C7D2FE; transform: translateY(-1px); box-shadow: 0 10px 24px -16px rgba(79,70,229,.5); }
-    .lot.is-active { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(79,70,229,.12), 0 12px 26px -18px rgba(79,70,229,.7); }
+    .lot:hover { border-color: #A5B4FC; }
+    .lot.is-active { border-color: var(--indigo); box-shadow: none; }
     .lot-top { display: flex; gap: 12px; align-items: flex-start; }
     .lot-mark {
       width: 40px; height: 40px; border-radius: 12px; flex: none; display: grid; place-items: center;
       font-weight: 800; color: #fff; font-size: 17px; background: var(--c);
-      box-shadow: inset 0 -2px 0 rgba(0,0,0,.12);
+      box-shadow: none;
     }
     .lot h3 { margin: 0; font-size: 15px; line-height: 1.3; letter-spacing: -.01em; }
     .lot .addr { margin: 3px 0 0; color: var(--mute); font-size: 12.5px; line-height: 1.4; }
@@ -165,7 +153,7 @@
       background: var(--soft); color: var(--deep); font-size: 12px; font-weight: 700;
       padding: 5px 10px 5px 8px; border-radius: 999px;
     }
-    .badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 22%, transparent); }
+    .badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); box-shadow: none; }
     .badge .num { font-weight: 600; opacity: .85; }
     .avail { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
     .meter { flex: 1; max-width: 120px; height: 6px; border-radius: 6px; background: #F1F5F9; overflow: hidden; }
@@ -194,7 +182,7 @@
     .btn:active { transform: scale(.97); }
     .btn.primary {
       background: var(--indigo); color: #fff;
-      box-shadow: 0 8px 18px -10px rgba(79,70,229,.9), inset 0 1px 0 rgba(255,255,255,.18);
+      box-shadow: none;
     }
     .btn.primary:hover { background: #4338CA; }
     .btn.ghost { background: #fff; border-color: var(--line); color: var(--ink-2); }
@@ -213,13 +201,13 @@
     }
     .pin-body {
       display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px;
-      background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 22px -10px rgba(15,23,42,.45);
+      background: #fff; border: 1px solid var(--line); box-shadow: none;
       font-weight: 800; font-size: 13px; white-space: nowrap; color: var(--ink);
       transition: background .25s, color .25s, border-color .25s;
     }
     .pin-p { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #fff; font-size: 12px; }
     .pin-tail { width: 12px; height: 12px; background: #fff; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: translateY(-7px) rotate(45deg); transition: background .25s; }
-    .pin-dot { width: 10px; height: 10px; margin-top: -6px; border-radius: 50%; background: var(--c); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(15,23,42,.35); }
+    .pin-dot { width: 10px; height: 10px; margin-top: -6px; border-radius: 50%; background: var(--c); border: 2px solid #fff; box-shadow: none; }
     .pin:hover .pin-in, .pin.hot .pin-in { transform: translate(-50%, -3px); }
     .pin.is-active { z-index: 3; }
     .pin.is-active .pin-body { background: var(--indigo); color: #fff; border-color: var(--indigo); }
@@ -227,10 +215,10 @@
     .pin.is-active .pin-p { box-shadow: 0 0 0 2px #fff; }
 
     .me { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; }
-    .me i { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%; background: var(--indigo); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(79,70,229,.6); }
+    .me i { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%; background: var(--indigo); border: 3px solid #fff; box-shadow: none; }
     .me i::before { content: ""; position: absolute; inset: -16px; border-radius: 50%; background: rgba(79,70,229,.18); animation: halo 2.4s var(--ease) infinite; }
     @keyframes halo { 0% { transform: scale(.4); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
-    .me b { position: absolute; left: 16px; top: -12px; font-size: 11px; font-weight: 700; color: #3730A3; background: #fff; padding: 3px 8px; border-radius: 999px; box-shadow: 0 4px 10px -4px rgba(15,23,42,.3); white-space: nowrap; }
+    .me b { position: absolute; left: 16px; top: -12px; font-size: 11px; font-weight: 700; color: #3730A3; background: #fff; padding: 3px 8px; border-radius: 999px; box-shadow: none; white-space: nowrap; }
 
     .pop {
       position: absolute; left: 0; top: 0; width: 300px; padding: 14px; z-index: 6;
@@ -250,7 +238,7 @@
     .x:hover { background: #E2E8F0; color: var(--ink); }
     .pop h4 { margin: 10px 0 2px; font-size: 14px; letter-spacing: -.01em; }
     .pop .sub { margin: 0; color: var(--mute); font-size: 12px; }
-    .slot-hero { margin-top: 12px; padding: 10px 12px; border-radius: 14px; background: linear-gradient(135deg, #EEF2FF, #F5F3FF); border: 1px solid #E0E7FF; }
+    .slot-hero { margin-top: 12px; padding: 10px 12px; border-radius: 14px; background: var(--indigo-soft); border: 1px solid #E0E7FF; }
     .slot-hero small { font-size: 11px; font-weight: 600; color: #4338CA; text-transform: uppercase; letter-spacing: .06em; }
     .slot-hero strong { display: block; font-size: 17px; letter-spacing: -.02em; margin-top: 2px; }
     .slots { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-top: 10px; }
@@ -259,7 +247,7 @@
       border: 1px dashed #A7F3D0; color: #047857; background: #fff;
     }
     .slots span.taken { background: #E2E8F0; border: 1px solid #E2E8F0; color: #94A3B8; }
-    .slots span.mine { background: var(--indigo); border: 1px solid var(--indigo); color: #fff; box-shadow: 0 4px 10px -4px rgba(79,70,229,.8); }
+    .slots span.mine { background: var(--indigo); border: 1px solid var(--indigo); color: #fff; box-shadow: none; }
     .ev-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 9px 10px; border-radius: 12px; background: #fff; border: 1px solid var(--line); font-size: 12px; }
     .ev-row .ev-ic { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; background: #ECFDF5; color: var(--green); flex: none; }
     .ev-row.none .ev-ic { background: #F1F5F9; color: var(--dim); }
@@ -375,7 +363,7 @@
     .slot { height: 42px; border-radius: 8px; border: 1.5px dashed #A7F3D0; background: #F0FDF8; color: #047857; font-size: 11px; font-weight: 800; display: grid; place-items: center; align-content: center; gap: 1px; padding: 0; }
     .slot svg.i { width: 11px; height: 11px; stroke-width: 2.2; }
     .slot.taken { background: #F1F5F9; border: 1.5px solid #E2E8F0; color: #CBD5E1; cursor: not-allowed; }
-    .slot.sel { background: var(--indigo); border: 1.5px solid var(--indigo); color: #fff; box-shadow: 0 6px 14px -6px rgba(79,70,229,.9); }
+    .slot.sel { background: var(--indigo); border: 1.5px solid var(--indigo); color: #fff; box-shadow: none; }
     .slot:not(.taken):not(.sel):hover { border-style: solid; border-color: var(--green); }
     .aisle { text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .4em; color: var(--dim); border-top: 1px dashed var(--line); border-bottom: 1px dashed var(--line); padding: 4px 0; }
     .slot-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 11px; color: var(--mute); font-weight: 600; }
@@ -387,8 +375,8 @@
     .fld { display: grid; gap: 6px; }
     .fld label { font-size: 12px; font-weight: 700; color: var(--ink-2); }
     .inp { height: 48px; width: 100%; min-width: 0; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: #fff; font-weight: 600; font-size: 14px; color: var(--ink); outline: 0; transition: border-color .2s, box-shadow .2s; }
-    .inp:focus { border-color: #A5B4FC; box-shadow: 0 0 0 4px rgba(79,70,229,.12); }
-    .inp.bad { border-color: var(--red); box-shadow: 0 0 0 4px rgba(239,68,68,.1); }
+    .inp:focus { border-color: #A5B4FC; box-shadow: none; }
+    .inp.bad { border-color: var(--red); box-shadow: none; }
     .inp::placeholder { color: #A3AEBF; font-weight: 500; }
     select.inp { -webkit-appearance: none; appearance: none; cursor: pointer; text-align: center; padding: 0 8px; }
     .hint { font-size: 12px; color: var(--mute); line-height: 1.4; }
@@ -400,7 +388,7 @@
     .switch b { display: block; font-size: 13px; }
     .switch .s { display: block; font-size: 12px; color: var(--mute); }
     .switch .tg { margin-left: auto; width: 44px; height: 26px; border-radius: 999px; background: #CBD5E1; position: relative; transition: background .2s; flex: none; }
-    .switch .tg::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .25s var(--ease); box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .switch .tg::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .25s var(--ease); box-shadow: none; }
     .switch input:checked ~ .tg { background: var(--green); }
     .switch input:checked ~ .tg::after { transform: translateX(18px); }
     .switch input:focus-visible ~ .tg { outline: 2px solid var(--indigo); outline-offset: 2px; }
@@ -444,8 +432,8 @@
     .sum-row b { text-align: right; }
     .pass-plate { display: inline-block; padding: 1px 7px; border: 1.5px solid currentColor; border-radius: 6px; font-family: ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .1em; font-weight: 800; font-size: 12.5px; white-space: nowrap; }
     /* pass */
-    .pass { border-radius: 20px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: 0 18px 36px -24px rgba(79,70,229,.6); }
-    .pass-top { position: relative; padding: 16px; color: #fff; display: grid; gap: 3px; background: radial-gradient(120% 140% at 100% 0%, #818CF8 0%, #4F46E5 45%, #3730A3 100%); }
+    .pass { border-radius: 20px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: none; }
+    .pass-top { position: relative; padding: 16px; color: #fff; display: grid; gap: 3px; background: var(--indigo); }
     .pass-top small { opacity: .85; font-size: 12px; font-weight: 600; }
     .pass-top .big { font-size: 28px; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; }
     .pass-id { position: absolute; top: 14px; right: 14px; font: 700 11px ui-monospace, Menlo, monospace; background: rgba(255,255,255,.18); padding: 4px 8px; border-radius: 999px; }
@@ -516,7 +504,7 @@
     .stars svg.i { width: 22px; height: 22px; }
     .stars button.on { color: var(--amber); border-color: #FDE68A; background: #FFFBEB; }
     .stars button.on svg { fill: currentColor; }
-    .nudge { padding: 16px; border-radius: 18px; background: linear-gradient(135deg, #EEF2FF, #F5F3FF); border: 1px solid #E0E7FF; display: grid; gap: 10px; }
+    .nudge { padding: 16px; border-radius: 18px; background: var(--indigo-soft); border: 1px solid #E0E7FF; display: grid; gap: 10px; }
     .nudge h4 { margin: 0; font-size: 15px; letter-spacing: -.01em; }
     .nudge p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
     /* notices, scenarios, empty, location */
@@ -561,12 +549,12 @@
     .pin { width: 0; height: 0; }
     .me, .dest { width: 0; height: 0; }
     .me[hidden], .dest[hidden] { display: none; }
-    .dest i { position: absolute; left: -11px; top: -26px; width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--ink); border: 3px solid #fff; box-shadow: 0 4px 10px rgba(15,23,42,.35); }
-    .dest b { position: absolute; left: 14px; top: -30px; font-size: 11px; font-weight: 700; color: var(--ink); background: #fff; padding: 3px 8px; border-radius: 999px; box-shadow: 0 4px 10px -4px rgba(15,23,42,.3); white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+    .dest i { position: absolute; left: -11px; top: -26px; width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--ink); border: 3px solid #fff; box-shadow: none; }
+    .dest b { position: absolute; left: 14px; top: -30px; font-size: 11px; font-weight: 700; color: var(--ink); background: #fff; padding: 3px 8px; border-radius: 999px; box-shadow: none; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
     .pop.dim { opacity: .35; }
     /* place search */
     .fields .field.search { position: relative; }
-    .suggest { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 30; padding: 6px; border-radius: 16px; display: grid; gap: 2px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .suggest { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 30; padding: 6px; border-radius: 16px; display: grid; gap: 2px; background: #fff; border: 1px solid var(--line); box-shadow: none; }
     .suggest[hidden] { display: none; }
     .suggest button { display: flex; gap: 10px; align-items: flex-start; text-align: left; border: 0; background: none; padding: 9px 10px; border-radius: 10px; color: var(--ink); }
     .suggest button svg.i { width: 16px; height: 16px; color: var(--indigo); margin-top: 2px; }
@@ -584,11 +572,128 @@
     .skel i:nth-child(1) { width: 70%; height: 18px; } .skel i:nth-child(2) { width: 45%; } .skel i:nth-child(3) { width: 85%; height: 36px; margin-top: 18px; }
     @keyframes shimmer { to { background-position: -200% 0; } }
     .capsule.idle { display: none; }
-    .fb-btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px; border-radius: 999px; font-weight: 700; font-size: 12.5px; color: #fff; background: var(--ink); border: 0; box-shadow: var(--shadow); justify-self: end; }
+    .fb-btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px; border-radius: 999px; font-weight: 700; font-size: 12.5px; color: #fff; background: var(--ink); border: 0; box-shadow: none; justify-self: end; }
     .fb-btn:hover { background: #1E293B; }
     a.pay-opt { text-decoration: none; color: inherit; }
     a.pay-opt > svg.i:last-child { margin-left: auto; color: var(--dim); }
     textarea.inp { height: auto; padding: 12px 14px; resize: vertical; line-height: 1.45; font-weight: 500; }
+
+    /* ---------- Flat design ---------- */
+    .glass { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--line); }
+    .lot.is-active { border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
+    .field:focus-within, .inp:focus { border-color: var(--indigo); box-shadow: inset 0 0 0 1px var(--indigo); }
+    .inp.bad { box-shadow: inset 0 0 0 1px var(--red); }
+    .pin-body { border-color: #CBD5E1; }
+    .seg button[aria-pressed="true"] { border: 1px solid var(--line); }
+    .seg { border: 1px solid var(--line); background: #F8FAFC; }
+
+    /* ---------- Search, When, filters, sort ---------- */
+    .top { gap: 10px; }
+    .field.search { flex: 1 1 auto; max-width: 560px; position: relative; }
+    .field.search input::placeholder { color: var(--dim); font-weight: 500; }
+    .clear-x { width: 28px; height: 28px; border: 0; border-radius: 8px; background: #F1F5F9; color: var(--mute); display: grid; place-items: center; flex: none; }
+    .clear-x svg.i { width: 14px; height: 14px; }
+    .clear-x:hover { background: #E2E8F0; color: var(--ink); }
+    .clear-x[hidden] { display: none; }
+    .when-wrap { position: relative; margin-left: auto; flex: none; }
+    .when-btn { width: 220px; text-align: left; cursor: pointer; color: var(--ink); }
+    .when-btn .fl b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .when-btn:hover, .when-btn[aria-expanded="true"] { border-color: var(--indigo); }
+    .when-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+    .menu { position: absolute; z-index: 40; top: calc(100% + 6px); background: #fff; border: 1px solid #CBD5E1; border-radius: 14px; padding: 6px; }
+    .menu[hidden] { display: none; }
+    .menu h4 { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--mute); }
+    .when-menu { right: 0; width: 344px; max-width: calc(100vw - 24px); padding: 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .when-menu > * { min-width: 0; }
+    .when-menu .seg { margin: 0; }
+    .day-row { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+    .day { flex: none; width: 56px; padding: 7px 0; border: 1px solid var(--line); border-radius: 10px; background: #fff; text-align: center; font-size: 11px; font-weight: 600; color: var(--mute); }
+    .day b { display: block; font-size: 15px; color: var(--ink); }
+    .day:hover { border-color: #A5B4FC; }
+    .day[aria-pressed="true"] { background: var(--indigo); border-color: var(--indigo); color: #E0E7FF; }
+    .day[aria-pressed="true"] b { color: #fff; }
+    .times { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 168px; overflow-y: auto; padding-right: 2px; }
+    .times button { height: 36px; border: 1px solid var(--line); background: #fff; border-radius: 9px; font-size: 12.5px; white-space: nowrap; padding: 0 4px; font-weight: 600; color: var(--ink-2); }
+    @media (max-width: 380px) { .times { grid-template-columns: repeat(3, 1fr); } }
+    .times button:hover { border-color: #A5B4FC; }
+    .times button[aria-pressed="true"] { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+    .menu-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .btn.sm { height: 36px; padding: 0 14px; border-radius: 10px; font-size: 13px; }
+    .filter-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .filters-btn { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid #CBD5E1; background: #fff; font-weight: 700; font-size: 13px; color: var(--ink); }
+    .filters-btn svg.i { width: 16px; height: 16px; }
+    .filters-btn:hover { border-color: var(--indigo); }
+    .filters-btn.on { border-color: var(--indigo); color: #3730A3; background: var(--indigo-soft); }
+    .filters-btn .count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--indigo); color: #fff; font-size: 11px; display: grid; place-items: center; }
+    .filters-btn .count[hidden] { display: none; }
+    .quick { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; min-width: 0; padding-left: 8px; border-left: 1px solid var(--line); }
+    .quick::-webkit-scrollbar { display: none; }
+    .qchip { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; font-weight: 600; color: var(--ink-2); transition: background .15s, border-color .15s; }
+    .qchip svg.i { width: 15px; height: 15px; }
+    .qchip .ck { display: none; stroke-width: 2.6; }
+    .qchip:hover { border-color: #A5B4FC; }
+    .qchip[aria-pressed="true"] { background: var(--indigo-soft); border-color: var(--indigo); color: #3730A3; }
+    .qchip[aria-pressed="true"] .ck { display: block; }
+    /* suggestions */
+    .suggest { border-color: #CBD5E1; max-height: min(420px, 60vh); overflow-y: auto; }
+    .sug-h { padding: 10px 10px 4px; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+    .suggest button.k-loc { color: var(--indigo); }
+    .suggest button.k-loc b { color: var(--indigo); }
+    .suggest button.k-recent svg.i { color: var(--mute); }
+    .suggest mark { background: none; color: var(--indigo); font-weight: 800; }
+    /* sort + active filters */
+    .list-tools { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; }
+    .sort-wrap { position: relative; }
+    .sort-btn { display: inline-flex; align-items: center; gap: 4px; height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; font-size: 12.5px; color: var(--mute); }
+    .sort-btn b { color: var(--ink); }
+    .sort-btn .chev { width: 14px; height: 14px; color: var(--dim); }
+    .sort-btn:hover, .sort-btn[aria-expanded="true"] { border-color: var(--indigo); }
+    .sort-menu { left: 0; width: 250px; }
+    .menu [role="menuitemradio"] { width: 100%; display: flex; gap: 10px; align-items: flex-start; text-align: left; border: 0; background: none; padding: 9px 10px; border-radius: 9px; color: var(--ink); }
+    .menu [role="menuitemradio"]:hover, .menu [role="menuitemradio"]:focus-visible { background: #F1F5F9; outline: none; }
+    .menu [role="menuitemradio"] b { display: block; font-size: 13px; }
+    .menu [role="menuitemradio"] small { display: block; font-size: 11.5px; color: var(--mute); }
+    .menu [role="menuitemradio"] .ck { width: 16px; height: 16px; color: var(--indigo); visibility: hidden; margin-top: 1px; stroke-width: 2.6; }
+    .menu [aria-checked="true"] .ck { visibility: visible; }
+    .active-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .active-filters[hidden] { display: none; }
+    .afchip { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px 0 11px; border-radius: 999px; border: 1px solid #C7D2FE; background: var(--indigo-soft); color: #3730A3; font-size: 12px; font-weight: 600; }
+    .afchip svg.i { width: 12px; height: 12px; stroke-width: 2.4; }
+    .afchip:hover { border-color: var(--indigo); }
+    .af-clear { border: 0; background: none; color: var(--indigo); font-size: 12px; font-weight: 700; padding: 0 6px; height: 28px; }
+    .af-clear:hover { text-decoration: underline; }
+    .af-note { align-self: center; margin-left: auto; font-size: 11.5px; color: var(--dim); font-weight: 600; }
+    .chip.hit { border-color: var(--indigo); background: var(--indigo-soft); color: #3730A3; }
+    /* filters panel */
+    .fgroup { display: grid; gap: 10px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .fgroup:last-child { border-bottom: 0; padding-bottom: 0; }
+    .fh { margin: 0; font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--mute); }
+    .opt .n { margin-left: 6px; font-size: 11.5px; font-weight: 600; color: var(--dim); }
+    .opt[aria-pressed="true"] .n { color: #6366F1; }
+    .opt:disabled { opacity: .45; cursor: not-allowed; }
+    .tog { position: relative; display: flex; align-items: center; gap: 10px; padding: 11px 0; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--ink); border-bottom: 1px solid #F1F5F9; }
+    .tog:last-child { border-bottom: 0; }
+    .tog input { position: absolute; opacity: 0; pointer-events: none; }
+    .tog .box { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid #CBD5E1; display: grid; place-items: center; flex: none; color: #fff; background: #fff; }
+    .tog .box svg.i { width: 12px; height: 12px; stroke-width: 3; opacity: 0; }
+    .tog input:checked + .box { background: var(--indigo); border-color: var(--indigo); }
+    .tog input:checked + .box svg.i { opacity: 1; }
+    .tog input:focus-visible + .box { outline: 2px solid var(--indigo); outline-offset: 2px; }
+    .tog > svg.i { width: 16px; height: 16px; color: var(--mute); }
+    .tog .t { flex: 1; }
+    .tog .n { font-size: 12px; font-weight: 600; color: var(--dim); }
+    .tog.zero .t { color: var(--dim); }
+    .more summary { list-style: none; display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 2px 0; }
+    .more summary::-webkit-details-marker { display: none; }
+    .more summary .hint { flex: 1; }
+    .more summary svg.i { width: 16px; height: 16px; color: var(--mute); transition: transform .2s; }
+    .more[open] summary svg.i { transform: rotate(180deg); }
+    .more summary:focus-visible { outline: 2px solid var(--indigo); outline-offset: 4px; border-radius: 6px; }
+    .fsub { display: grid; gap: 8px; margin-top: 14px; }
+    .fsub h4 { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+    .foot-row { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+    .sh-foot .foot-row .btn.ghost { width: auto; padding: 0 18px; }
+    .empty .chips { justify-content: center; }
 
     /* ---------- Tablet: narrower panel ---------- */
     @media (max-width: 1240px) {
@@ -609,11 +714,15 @@
       .ui { display: contents; }
       .top { order: 1; padding: 12px; }
       .top-row { flex-wrap: wrap; }
-      .brand { flex: 1 1 100%; }
+      .brand { flex: 1 1 auto; }
+      .when-wrap { order: 2; }
+      .when-btn { width: 168px; height: 46px; }
+      .field.search { order: 3; flex: 1 1 100%; max-width: none; }
+      .filter-row { margin: 0 -12px; padding: 0 12px; }
       .brand > span:not(.brand-mark) { display: block; }
       .fields, .when { flex: 1 1 100%; margin: 0; }
       .fields .field, .when .field { flex: 1 1 0; max-width: none; width: auto; }
-      .map { order: 2; position: relative; inset: auto; height: 62svh; min-height: 420px; border-radius: var(--radius); border: 1px solid var(--glass-line); box-shadow: var(--shadow); }
+      .map { order: 2; position: relative; inset: auto; height: 62svh; min-height: 420px; border-radius: var(--radius); border: 1px solid var(--glass-line); box-shadow: none; }
       .row { order: 3; padding: 0; display: block; }
       .panel { width: 100%; max-height: none; }
       .list { overflow: visible; }
@@ -659,7 +768,7 @@
     @media (max-width: 420px) {
       .app { padding-left: 8px; padding-right: 8px; }
       .field { padding: 0 10px; gap: 8px; }
-      .field svg.i:first-child { display: none; }
+      .field > svg.i:first-child { display: none; }
       .cap-ic { width: 38px; height: 38px; font-size: 15px; }
       .capsule strong { font-size: 14px; }
       .cap-stat { padding: 0 8px; }
@@ -720,6 +829,7 @@
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
     <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
     <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4.5 5.5h15a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5V17H4.5A1.5 1.5 0 0 1 3 15.5V7a1.5 1.5 0 0 1 1.5-1.5z"/><path d="M8 10h8M8 13h5"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
     <symbol id="i-restart" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.5"/><path d="M4 3.5v5h5"/></symbol>
   </svg>
 
@@ -782,42 +892,34 @@
         <div class="top-row">
           <a class="brand" href="#" aria-label="Spotlane home">
             <span class="brand-mark">S</span>
-            <span><b>Spotlane</b><small>Smart parking finder</small></span>
+            <span><b>Spotlane</b><small>Parking in Jordan</small></span>
           </a>
-          <div class="fields">
-            <label class="field">
-              <svg class="i"><use href="#i-pin"/></svg>
-              <span class="fl"><small>You are in</small><input id="city" value="Amman, Jordan" autocomplete="off" readonly></span>
-            </label>
-            <label class="field search">
-              <svg class="i"><use href="#i-search"/></svg>
-              <span class="fl"><small>Street</small><input id="street" value="Zahran St" autocomplete="off" spellcheck="false" placeholder="Search a street or place"></span>
-              <div class="suggest" id="suggest" role="listbox" aria-label="Places" hidden></div>
-            </label>
+          <div class="field search" id="search-field">
+            <svg class="i"><use href="#i-search"/></svg>
+            <label class="fl" for="street"><small>Where to?</small>
+              <input id="street" value="Zahran St" autocomplete="off" spellcheck="false" placeholder="Street, place or area in Jordan"></label>
+            <button type="button" class="clear-x" id="street-clear" aria-label="Clear search"><svg class="i"><use href="#i-x"/></svg></button>
+            <div class="suggest" id="suggest" role="listbox" aria-label="Places" hidden></div>
           </div>
-          <div class="when">
-            <label class="field">
-              <svg class="i"><use href="#i-cal"/></svg>
-              <span class="fl"><small>Date</small>
-                <select id="date"><option>Jun 27</option><option selected>Jun 28</option><option>Jun 29</option><option>Jun 30</option></select>
-              </span>
-              <svg class="i chev"><use href="#i-chev"/></svg>
-            </label>
-            <label class="field">
+          <div class="when-wrap">
+            <button type="button" class="field when-btn" id="when-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="when-menu">
               <svg class="i"><use href="#i-clock"/></svg>
-              <span class="fl"><small>Time</small>
-                <select id="time"><option>6:30 PM</option><option>7:00 PM</option><option selected>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option><option>9:00 PM</option></select>
-              </span>
+              <span class="fl"><small>When</small><b id="when-label">Now</b></span>
               <svg class="i chev"><use href="#i-chev"/></svg>
-            </label>
+            </button>
+            <div class="menu when-menu" id="when-menu" role="dialog" aria-label="Arrival time" hidden></div>
           </div>
+          <input type="hidden" id="date" value="Today"><input type="hidden" id="time" value="7:30 PM">
         </div>
-        <div class="amen" role="group" aria-label="Amenities">
-          <label class="pill"><input type="checkbox" value="disabled" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Disabled parking ♿</span></label>
-          <label class="pill"><input type="checkbox" value="ev" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>EV charging station ⚡</span></label>
-          <label class="pill"><input type="checkbox" value="long" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Car longer than 3.5m 🚐</span></label>
-          <label class="pill"><input type="checkbox" value="pr" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Park and Ride 🚇</span></label>
-          <label class="pill"><input type="checkbox" value="wash" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Park and wash 🧼</span></label>
+        <div class="filter-row">
+          <button type="button" class="filters-btn" id="filters-btn" aria-haspopup="dialog"><svg class="i"><use href="#i-sliders"/></svg><span>Filters</span><b class="count num" id="f-count" hidden></b></button>
+          <div class="quick" role="group" aria-label="Quick filters">
+            <button type="button" class="qchip" data-q="avail" aria-pressed="false"><svg class="i ck"><use href="#i-check"/></svg>Good availability</button>
+            <button type="button" class="qchip" data-q="ev" aria-pressed="false"><svg class="i ck"><use href="#i-check"/></svg><svg class="i"><use href="#i-bolt"/></svg>EV charging</button>
+            <button type="button" class="qchip" data-q="covered" aria-pressed="false"><svg class="i ck"><use href="#i-check"/></svg>Covered</button>
+            <button type="button" class="qchip" data-q="cheap" aria-pressed="false"><svg class="i ck"><use href="#i-check"/></svg>Up to JD 1/hr</button>
+            <button type="button" class="qchip" data-q="access" aria-pressed="false"><svg class="i ck"><use href="#i-check"/></svg><svg class="i"><use href="#i-access"/></svg>Accessible</button>
+          </div>
         </div>
       </header>
 
@@ -829,23 +931,16 @@
             <h1 id="found">We found <em>3 parking lots</em> near you</h1>
             <p id="ctx">Near Zahran St · Jun 28, 7:30 PM</p>
             <span class="src" id="src">Loading car parks…</span>
-            <div class="seg" role="group" aria-label="Sort results">
-              <button type="button" data-sort="best" aria-pressed="true">Best match</button>
-              <button type="button" data-sort="price" aria-pressed="false">Cheapest</button>
-              <button type="button" data-sort="dist" aria-pressed="false">Closest</button>
-            </div>
-          </div>
-          <div class="list" id="list" aria-live="polite">
-            <div class="empty" id="empty" hidden>
-              <span class="ic-box amber"><svg class="i"><use href="#i-search"/></svg></span>
-              <h3>No lots available right now</h3>
-              <p>Everything nearby is full or doesn't match your filters for this time.</p>
-              <div class="chips">
-                <button type="button" class="opt" data-fix="time">Try 8:00 PM</button>
-                <button type="button" class="opt" data-fix="radius">Widen to 2 km</button>
-                <button type="button" class="opt" data-fix="clear">Clear filters</button>
+            <div class="list-tools">
+              <div class="sort-wrap">
+                <button type="button" class="sort-btn" id="sort-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="sort-menu">Sort: <b id="sort-label">Best match</b><svg class="i chev"><use href="#i-chev"/></svg></button>
+                <div class="menu sort-menu" id="sort-menu" role="menu" aria-label="Sort car parks" hidden></div>
               </div>
             </div>
+            <div class="active-filters" id="active-filters" hidden></div>
+          </div>
+          <div class="list" id="list" aria-live="polite">
+            <div class="empty" id="empty" hidden></div>
           </div>
         </aside>
       </div>
@@ -1134,25 +1229,60 @@
     }
 
     /* ---------------- Place search (Photon) ---------------- */
-    const street = $('#street'), sug = $('#suggest');
-    let sugT, sugItems = [], sugIdx = -1;
-    function hideSug() { sug.hidden = true; street.setAttribute('aria-expanded', 'false'); sugIdx = -1; }
+    // Focus shows shortcuts (current location, recent, popular); typing 3+ letters searches Jordan.
+    const street = $('#street'), sug = $('#suggest'), streetClear = $('#street-clear');
+    const RECENT_KEY = 'spotlane-recent';
+    const POPULAR = [                                                    // approximate centres, used as shortcuts only
+      { name: 'Abdali Boulevard', sub: 'Al-Abdali, Amman', ll: [35.9105, 31.9636] },
+      { name: 'Rainbow Street', sub: 'Jabal Amman', ll: [35.9265, 31.9505] },
+      { name: 'Shmeisani', sub: 'Amman', ll: [35.9002, 31.9681] },
+      { name: 'Downtown (Al-Balad)', sub: 'Amman', ll: [35.9339, 31.9516] },
+      { name: 'Sweifieh', sub: 'Amman', ll: [35.8652, 31.9553] }
+    ];
+    let sugT, sugItems = [], sugIdx = -1, sugQuery = '';
+    const getRecent = () => { try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch (e) { return []; } };
+    function addRecent(s) {
+      try { const r = getRecent().filter(x => x.name !== s.name); r.unshift({ name: s.name, sub: s.sub || '', ll: s.ll }); localStorage.setItem(RECENT_KEY, JSON.stringify(r.slice(0, 4))); } catch (e) {}
+    }
+    const hl = name => {
+      const i = sugQuery ? name.toLowerCase().indexOf(sugQuery.toLowerCase()) : -1;
+      return i < 0 ? esc(name) : esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + sugQuery.length)) + '</mark>' + esc(name.slice(i + sugQuery.length));
+    };
+    function syncClear() { streetClear.hidden = !street.value; }
+    function hideSug() { sug.hidden = true; street.setAttribute('aria-expanded', 'false'); street.removeAttribute('aria-activedescendant'); sugIdx = -1; }
+    function homeSug() {
+      sugQuery = '';
+      const rec = getRecent();
+      sugItems = [{ kind: 'loc', name: 'Use my current location', sub: meSource === 'gps' ? 'Location is on' : 'Find car parks around you' },
+        ...rec.map(r => ({ ...r, kind: 'recent' })),
+        ...POPULAR.filter(p => !rec.some(r => r.name === p.name)).slice(0, 5 - Math.min(rec.length, 3)).map(p => ({ ...p, kind: 'popular' }))];
+      sugIdx = -1; showSug();
+    }
     function showSug(msg) {
-      sug.innerHTML = msg ? `<p class="sug-msg">${esc(msg)}</p>` : sugItems.map((s, i) =>
-        `<button type="button" role="option" id="sug-${i}" class="${i === sugIdx ? 'on' : ''}" aria-selected="${i === sugIdx}" data-i="${i}">${ico('pin')}<span><b dir="auto">${esc(s.name)}</b><small dir="auto">${esc(s.sub)}</small></span></button>`).join('')
-        || '<p class="sug-msg">No places found in Jordan.</p>';
+      const head = { recent: 'Recent', popular: 'Popular in Amman', result: 'Places in Jordan' };
+      const icon = { loc: 'locate', recent: 'clock', popular: 'pin', result: 'pin' };
+      let html = '', last = '';
+      sugItems.forEach((s, i) => {
+        if (head[s.kind] && s.kind !== last) html += `<div class="sug-h" role="presentation">${head[s.kind]}</div>`;
+        last = s.kind;
+        html += `<button type="button" role="option" tabindex="-1" id="sug-${i}" class="k-${s.kind}${i === sugIdx ? ' on' : ''}" aria-selected="${i === sugIdx}" data-i="${i}">${ico(icon[s.kind])}<span><b dir="auto">${hl(s.name)}</b>${s.sub ? `<small dir="auto">${esc(s.sub)}</small>` : ''}</span></button>`;
+      });
+      sug.innerHTML = (msg ? `<p class="sug-msg" role="status">${esc(msg)}</p>` : '') + html;
+      if (!msg && !html) sug.innerHTML = `<p class="sug-msg" role="status">No places in Jordan match “${esc(sugQuery)}”. Try a street or area name.</p>`;
       sug.hidden = false; street.setAttribute('aria-expanded', 'true');
-      street.setAttribute('aria-activedescendant', sugIdx >= 0 ? `sug-${sugIdx}` : '');
+      if (sugIdx >= 0) { street.setAttribute('aria-activedescendant', `sug-${sugIdx}`); $(`#sug-${sugIdx}`, sug).scrollIntoView({ block: 'nearest' }); }
+      else street.removeAttribute('aria-activedescendant');
       $$('[data-i]', sug).forEach(b => b.onmousedown = e => { e.preventDefault(); pickSug(+b.dataset.i); });
     }
     async function searchPlaces(q) {
       const [[w, s], [e, n]] = CONFIG.jordanBounds;
+      sugQuery = q; sugItems = []; sugIdx = -1; showSug('Searching…');
       try {
         const j = await fetchJSON(`${CONFIG.photon}?q=${encodeURIComponent(q)}&limit=6&lat=${center[1]}&lon=${center[0]}&bbox=${w},${s},${e},${n}&lang=en`, 7000);
         if (street.value.trim() !== q) return;
         sugItems = (j.features || []).filter(f => inJordan(f.geometry.coordinates)).map(f => {
           const p = f.properties || {};
-          return { ll: f.geometry.coordinates, name: p.name || [p.street, p.housenumber].filter(Boolean).join(' ') || q, sub: [p.street !== p.name ? p.street : '', p.district || p.locality, p.city || p.county].filter(Boolean).join(', ') };
+          return { kind: 'result', ll: f.geometry.coordinates, name: p.name || [p.street, p.housenumber].filter(Boolean).join(' ') || q, sub: [p.street !== p.name ? p.street : '', p.district || p.locality, p.city || p.county].filter(Boolean).join(', ') };
         });
         sugIdx = sugItems.length ? 0 : -1; showSug();
       } catch (err) { sugItems = []; showSug('Search is unavailable right now — try again in a moment.'); }
@@ -1160,28 +1290,35 @@
     function pickSug(i) {
       const s = sugItems[i]; if (!s) return;
       hideSug(); street.blur();
+      track('search_pick', { kind: s.kind });
+      if (s.kind === 'loc') { street.value = 'Your location'; syncClear(); return locate(false); }
       if (locOff) setLocOff(false, true);
+      if (s.kind === 'result') addRecent(s);
       setCenter(s.ll, s.name, 'search');
-      track('search_pick');
+      syncClear();
     }
     street.setAttribute('role', 'combobox'); street.setAttribute('aria-autocomplete', 'list');
     street.setAttribute('aria-controls', 'suggest'); street.setAttribute('aria-expanded', 'false');
+    street.addEventListener('focus', () => { street.select(); homeSug(); });
     street.addEventListener('input', () => {
-      clearTimeout(sugT); const q = street.value.trim();
-      if (q.length < 3) return hideSug();
+      syncClear(); clearTimeout(sugT); const q = street.value.trim();
+      if (q.length < 3) return homeSug();
       sugT = setTimeout(() => searchPlaces(q), 300);
     });
     street.addEventListener('keydown', e => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        if (sug.hidden || !sugItems.length) return;
+        if (sug.hidden) homeSug();
+        if (!sugItems.length) return;
         e.preventDefault(); sugIdx = (sugIdx + (e.key === 'ArrowDown' ? 1 : -1) + sugItems.length) % sugItems.length; showSug();
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        if (sugItems.length && !sug.hidden) pickSug(Math.max(0, sugIdx));
+        if (sugItems.length && !sug.hidden && (sugIdx >= 0 || sugQuery)) pickSug(Math.max(0, sugIdx));
         else if (street.value.trim().length >= 3) searchPlaces(street.value.trim());
-      } else if (e.key === 'Escape') hideSug();
+      } else if (e.key === 'Escape') { e.stopPropagation(); hideSug(); }
     });
     street.addEventListener('blur', () => setTimeout(hideSug, 120));
+    streetClear.onmousedown = e => e.preventDefault();
+    streetClear.onclick = () => { street.value = ''; syncClear(); street.focus(); homeSug(); };
 
     /* ---------------- Pop-over placement + framing ---------------- */
     const isStacked = () => matchMedia('(max-width: 959px)').matches;
@@ -1732,6 +1869,49 @@
         };
       },
 
+      filters() {
+        const total = Object.keys(LOTS).length, shown = Object.values(LOTS).filter(l => matches(l)).length;
+        const opt = (g, v, label) => {
+          const on = String(F[g]) === String(v), n = countWith(f => { f[g] = v; });
+          return `<button type="button" class="opt" data-fg="${g}" data-fv="${v}" aria-pressed="${on}" ${!on && !n ? 'disabled' : ''}>${label}<span class="n num">${n}</span></button>`;
+        };
+        const tog = (g, v, label, icon) => {
+          const on = F[g].has(v), n = countWith(f => { f[g].add(v); });
+          return `<label class="tog${!on && !n ? ' zero' : ''}"><input type="checkbox" data-tg="${g}" value="${v}" ${on ? 'checked' : ''}><span class="box">${ico('check')}</span>${icon ? ico(icon) : ''}<span class="t">${label}</span><span class="n num">${n}</span></label>`;
+        };
+        const moreActive = (F.dist !== 'any') + F.amen.size;
+        return {
+          title: 'Filters', sub: `${shown} of ${total} car parks match`,
+          body: `
+            <div class="fgroup"><h3 class="fh">Availability</h3>
+              <div class="chips">${opt('avail', 'any', 'Any')}${opt('avail', 'some', 'Good availability')}${opt('avail', 'high', 'Plenty of spaces')}</div></div>
+            <div class="fgroup"><h3 class="fh">Price per hour</h3>
+              <div class="chips">${opt('price', 'any', 'Any')}${opt('price', 'free', 'Free')}${opt('price', '1', 'Up to JD 1')}${opt('price', '1.5', 'Up to JD 1.50')}${opt('price', '2', 'Up to JD 2')}</div></div>
+            <div class="fgroup"><h3 class="fh">Car park type</h3>
+              <div>${tog('types', 'covered', 'Covered · multi-storey or underground')}${tog('types', 'open', 'Open-air')}${tog('types', 'street', 'Street-side')}</div></div>
+            <details class="fgroup more" ${moreOpen || moreActive ? 'open' : ''}>
+              <summary><h3 class="fh">More filters</h3><span class="hint">${moreActive ? `${moreActive} active` : 'Distance and amenities'}</span>${ico('chev')}</summary>
+              <div class="fsub"><h4>Distance from where you're going</h4>
+                <div class="chips">${opt('dist', 'any', 'Any')}${opt('dist', '0.5', '500 m')}${opt('dist', '1', '1 km')}${opt('dist', '2', '2 km')}</div></div>
+              <div class="fsub"><h4>Amenities</h4>
+                <div>${tog('amen', 'disabled', 'Accessible bays', 'access')}${tog('amen', 'ev', 'EV charging', 'bolt')}${tog('amen', 'long', 'Fits vehicles over 3.5 m', 'van')}${tog('amen', 'pr', 'Park & Ride', 'train')}${tog('amen', 'wash', 'Car wash', 'drop')}</div></div>
+            </details>`,
+          foot: `<div class="foot-row"><button type="button" class="btn ghost" data-fclear ${activeCount() ? '' : 'disabled'}>Clear all</button>
+            <button type="button" class="btn primary" data-fshow ${shown ? '' : 'disabled'}>${shown ? `Show ${shown} car park${shown === 1 ? '' : 's'}` : 'No matches — loosen a filter'}</button></div>`,
+          bind(root) {
+            on(root, '[data-fg]', 'click', e => {
+              const { fg, fv } = e.currentTarget.dataset;
+              F[fg] = String(F[fg]) === fv && fv !== 'any' ? 'any' : fv;
+              filtersChanged('panel:' + fg);
+            });
+            on(root, '[data-tg]', 'change', e => { flip(F[e.target.dataset.tg], e.target.value); filtersChanged('panel:' + e.target.dataset.tg); });
+            on(root, '.more', 'toggle', e => { moreOpen = e.currentTarget.open; });
+            $('[data-fclear]', root).onclick = clearFilters;
+            $('[data-fshow]', root).onclick = () => { closeSheet(); if (isStacked()) $('.panel').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); };
+          }
+        };
+      },
+
       navigate() {
         const l = LOTS[S.lot], [lo, la] = l.ll;
         const apps = [
@@ -1958,33 +2138,195 @@
       else { setLocOff(false, true); street.focus(); street.select(); }
     });
 
-    // Amenity pills: all (or none) ticked = no filter; otherwise show lots with any ticked amenity
+    /* ---------------- Filters (progressive disclosure) ---------------- */
+    // Quick chips cover the common needs; "Filters" opens the full set. Each option shows how many car parks it would leave.
+    const F = { avail: 'any', price: 'any', dist: 'any', types: new Set(), amen: new Set() };
+    let moreOpen = false;
+    const TYPE_OF = l => ['multi-storey', 'underground', 'rooftop'].includes(l.kind) ? 'covered' : ['street_side', 'lane'].includes(l.kind) ? 'street' : 'open';
+    const FL = {
+      avail: { some: 'Good availability', high: 'Plenty of spaces' },
+      price: { free: 'Free only', 1: 'Up to JD 1/hr', 1.5: 'Up to JD 1.50/hr', 2: 'Up to JD 2/hr' },
+      dist: { 0.5: 'Within 500 m', 1: 'Within 1 km', 2: 'Within 2 km' },
+      types: { covered: 'Covered', open: 'Open-air', street: 'Street-side' },
+      amen: { disabled: 'Accessible bays', ev: 'EV charging', long: 'Fits vehicles over 3.5 m', pr: 'Park & Ride', wash: 'Car wash' }
+    };
+    function matches(l, f = F) {
+      if (f.avail === 'some' && l.level === 'low') return false;
+      if (f.avail === 'high' && l.level !== 'high') return false;
+      if (f.price === 'free' && l.price > 0) return false;
+      if (f.price !== 'any' && f.price !== 'free' && l.price > +f.price) return false;
+      if (f.dist !== 'any' && (l.dist || 0) > +f.dist) return false;
+      if (f.types.size && !f.types.has(TYPE_OF(l))) return false;
+      for (const a of f.amen) if (!l.amen.includes(a)) return false;
+      return true;
+    }
+    const countWith = mut => { const f = { ...F, types: new Set(F.types), amen: new Set(F.amen) }; mut(f); return Object.values(LOTS).filter(l => matches(l, f)).length; };
+    const activeCount = () => (F.avail !== 'any') + (F.price !== 'any') + (F.dist !== 'any') + F.types.size + F.amen.size;
+    function activeList() {
+      const out = [];
+      if (F.avail !== 'any') out.push([FL.avail[F.avail], () => { F.avail = 'any'; }]);
+      if (F.price !== 'any') out.push([FL.price[F.price], () => { F.price = 'any'; }]);
+      if (F.dist !== 'any') out.push([FL.dist[F.dist], () => { F.dist = 'any'; }]);
+      F.types.forEach(t => out.push([FL.types[t], () => F.types.delete(t)]));
+      F.amen.forEach(a => out.push([FL.amen[a], () => F.amen.delete(a)]));
+      return out;
+    }
+    const flip = (set, v) => set.has(v) ? set.delete(v) : set.add(v);
+    const QUICK = {
+      avail: { on: () => F.avail !== 'any', toggle: () => { F.avail = F.avail === 'any' ? 'some' : 'any'; } },
+      ev: { on: () => F.amen.has('ev'), toggle: () => flip(F.amen, 'ev') },
+      covered: { on: () => F.types.has('covered'), toggle: () => flip(F.types, 'covered') },
+      cheap: { on: () => F.price === '1', toggle: () => { F.price = F.price === '1' ? 'any' : '1'; } },
+      access: { on: () => F.amen.has('disabled'), toggle: () => flip(F.amen, 'disabled') }
+    };
     function applyFilter() {
-      const boxes = $$('.amen input'), want = boxes.filter(i => i.checked).map(i => i.value);
-      const all = !want.length || want.length === boxes.length;
       let n = 0;
       Object.values(LOTS).forEach(l => {
-        const ok = !emptyScn && (all || want.some(a => l.amen.includes(a)));
+        const ok = !emptyScn && matches(l);
         l.visible = ok;
         const card = $(`.lot[data-id="${CSS.escape(l.id)}"]`); if (card) card.hidden = !ok;
         if (pins[l.id]) pins[l.id].hidden = !ok;
         if (ok) n++; else if (selected === l.id) { pop.classList.remove('on'); setRoute(null); }
       });
-      $$('.chip[data-amen]').forEach(c => c.classList.toggle('off', !all && !want.includes(c.dataset.amen)));
-      $('#found').innerHTML = n ? `We found <em>${n} parking lot${n > 1 ? 's' : ''}</em> near you` : 'No parking lots near you';
-      $('#empty').hidden = n > 0 || $('#list').classList.contains('loading');
+      $$('.chip[data-amen]').forEach(c => c.classList.toggle('hit', F.amen.has(c.dataset.amen)));
+      const total = Object.keys(LOTS).length, k = activeCount();
+      $('#found').innerHTML = n ? `We found <em>${n} parking lot${n > 1 ? 's' : ''}</em> near you` : 'No parking lots to show';
+      paintFilterUI(); renderEmpty(n);
       return n;
     }
-    function emptyReason(text) { $('#empty p').textContent = text; }
-    $$('[data-fix]').forEach(b => b.onclick = () => {
-      const f = b.dataset.fix; emptyScn = false;
-      emptyReason("Everything nearby is full or doesn't match your filters for this time.");
-      if (f === 'time') { $('#time').value = '8:00 PM'; ctx(); }
-      if (f === 'clear') $$('.amen input').forEach(i => i.checked = true);
-      if (f === 'radius') { CONFIG.searchRadius = Math.min(6000, CONFIG.searchRadius * 2); return loadLots(center).then(() => toast(`Search widened to ${(CONFIG.searchRadius / 1000).toFixed(1)} km`)); }
+    function paintFilterUI() {
+      const k = activeCount(), c = $('#f-count');
+      c.hidden = !k; c.textContent = k;
+      $('#filters-btn').classList.toggle('on', k > 0);
+      $('#filters-btn').setAttribute('aria-label', k ? `Filters, ${k} active` : 'Filters');
+      $$('.qchip').forEach(b => b.setAttribute('aria-pressed', QUICK[b.dataset.q].on()));
+      const af = $('#active-filters'), list = activeList();
+      af.hidden = !list.length;
+      af.innerHTML = list.map(([t], i) => `<button type="button" class="afchip" data-af="${i}" aria-label="Remove filter: ${t}">${t}${ico('x')}</button>`).join('')
+        + (list.length > 1 ? '<button type="button" class="af-clear" data-af="all">Clear all</button>' : '')
+        + (list.length ? `<span class="af-note num">${Object.values(LOTS).filter(l => !l.visible).length} hidden</span>` : '');
+      $$('[data-af]', af).forEach(b => b.onclick = () => {
+        if (b.dataset.af === 'all') return clearFilters();
+        list[+b.dataset.af][1](); filtersChanged('chip_remove');
+      });
+    }
+    function clearFilters() { Object.assign(F, { avail: 'any', price: 'any', dist: 'any' }); F.types.clear(); F.amen.clear(); filtersChanged('clear'); }
+    function filtersChanged(how) {
       const n = applyFilter();
-      toast(f === 'time' ? `Showing lots for 8:00 PM · ${n} found` : `Filters cleared · ${n} lots found`);
-      const first = sortedIds().find(id => LOTS[id].visible); if (first) select(first);
+      track('filter', { how, active: activeCount(), results: n });
+      if (!selected || !LOTS[selected] || !LOTS[selected].visible) {
+        const first = sortedIds().find(id => LOTS[id].visible);
+        if (first) select(first);
+      } else if (!locOff) drawRoute(selected);
+      if (S.view === 'filters') rerender();
+    }
+    $$('.qchip').forEach(b => b.onclick = () => { QUICK[b.dataset.q].toggle(); filtersChanged('quick:' + b.dataset.q); });
+    $('#filters-btn').onclick = () => { track('filters_open'); openSheet('filters'); };
+
+    // Empty state: explain why, and offer the one action most likely to help
+    let emptyNote = '';
+    function emptyReason(text) { emptyNote = text; }
+    function renderEmpty(n) {
+      const e = $('#empty');
+      e.hidden = n > 0 || $('#list').classList.contains('loading');
+      if (!e.hidden && !Object.keys(LOTS).length && !emptyNote) e.hidden = true;
+      if (e.hidden) return;
+      const list = activeList();
+      const [title, text, btns] = emptyScn
+        ? ['No lots available right now', 'Everything nearby is full at this time.', [['later', 'Try 30 minutes later'], ['radius', 'Search a wider area']]]
+        : list.length
+          ? [`No car parks match ${list.length > 1 ? 'these filters' : 'this filter'}`, `${Object.keys(LOTS).length} car parks are nearby, but none fit everything you picked.`,
+             [['undo', `Remove “${list[list.length - 1][0]}”`], ...(list.length > 1 ? [['clear', 'Clear all filters']] : [])]]
+          : ['No car parks found here', emptyNote || 'Nothing is mapped around this spot yet.', [['radius', 'Search a wider area']]];
+      e.innerHTML = `<span class="ic-box amber">${ico('search')}</span><h3>${title}</h3><p>${esc(text)}</p>
+        <div class="chips">${btns.map(([k, t], i) => `<button type="button" class="opt" data-fix="${k}"${i === 0 ? ' aria-pressed="true"' : ''}>${esc(t)}</button>`).join('')}</div>`;
+    }
+    $('#empty').addEventListener('click', ev => {
+      const b = ev.target.closest('[data-fix]'); if (!b) return;
+      const f = b.dataset.fix; track('empty_fix', { f });
+      if (f === 'undo') { const l = activeList(); l[l.length - 1][1](); return filtersChanged('undo'); }
+      if (f === 'clear') return clearFilters();
+      emptyScn = false;
+      if (f === 'later') { setWhen('later', WHEN.day, roundUp((WHEN.time ?? nowMin()) + 30, 30)); return filtersChanged('later'); }
+      if (f === 'radius') { CONFIG.searchRadius = Math.min(6000, CONFIG.searchRadius * 2); loadLots(center).then(() => toast(`Search widened to ${(CONFIG.searchRadius / 1000).toFixed(1)} km`)); }
+    });
+
+    /* ---------------- When (arrival time) ---------------- */
+    // "Now" by default; "Schedule" reveals day + time only when the driver asks for it.
+    const WHEN = { mode: 'now', day: 0, time: 0 };
+    const roundUp = (m, step) => Math.ceil(m / step) * step;
+    const nowMin = () => { const t = new Date(); return t.getHours() * 60 + t.getMinutes(); };
+    const dayDate = d => { const t = new Date(); t.setDate(t.getDate() + d); return t; };
+    const dayLabel = d => d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : dayDate(d).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    const firstSlot = d => d === 0 ? roundUp(nowMin() + 15, 30) : 6 * 60;
+    function setWhen(mode, day = 0, time = 0, quiet) {
+      Object.assign(WHEN, { mode, day, time: mode === 'now' ? roundUp(nowMin() + 5, 5) : time });
+      $('#date').value = dayLabel(WHEN.day); $('#time').value = fmtT(WHEN.time);
+      $('#when-label').textContent = mode === 'now' ? 'Now' : `${dayLabel(day)}, ${fmtT(WHEN.time)}`;
+      if (quiet) return;
+      ctx(); jitter(3); if (S.status === 'held') S.arrive = null;
+      track('when', { mode, day });
+      toast(mode === 'now' ? 'Showing spaces available now' : `Showing spaces for ${dayLabel(day)}, ${fmtT(WHEN.time)}`, 'clock');
+    }
+    let draft = null;
+    const whenBtn = $('#when-btn'), whenMenu = $('#when-menu');
+    function renderWhen() {
+      const later = draft.mode === 'later', slots = [];
+      for (let t = firstSlot(draft.day); t < 24 * 60; t += 30) slots.push(t);
+      whenMenu.innerHTML = `
+        <div class="seg" role="group" aria-label="Arrival" style="grid-template-columns:1fr 1fr">
+          <button type="button" data-wm="now" aria-pressed="${!later}">Leave now</button>
+          <button type="button" data-wm="later" aria-pressed="${later}">Schedule</button></div>
+        ${later ? `<div><h4>Day</h4><div class="day-row">${Array.from({ length: 7 }, (_, d) => `<button type="button" class="day" data-day="${d}" aria-pressed="${d === draft.day}" aria-label="${dayLabel(d)}">${d === 0 ? 'Today' : d === 1 ? 'Tmrw' : dayDate(d).toLocaleDateString('en-GB', { weekday: 'short' })}<b class="num">${dayDate(d).getDate()}</b></button>`).join('')}</div></div>
+          <div><h4>Arrive at</h4>${slots.length ? `<div class="times">${slots.map(t => `<button type="button" class="num" data-t="${t}" aria-pressed="${t === draft.time}">${fmtT(t)}</button>`).join('')}</div>` : '<p class="hint">No more times today — pick another day.</p>'}</div>`
+        : `<p class="hint">We'll show spaces you can use in the next 15 minutes. Choose “Schedule” to plan ahead.</p>`}
+        <div class="menu-foot"><span class="hint">${later ? (draft.time ? `${dayLabel(draft.day)} at ${fmtT(draft.time)}` : 'Pick a time') : 'Arriving in about 5 min'}</span>
+          <button type="button" class="btn primary sm" data-wdone ${later && !draft.time ? 'disabled' : ''}>Done</button></div>`;
+      $$('[data-wm]', whenMenu).forEach(b => b.onclick = () => {
+        draft.mode = b.dataset.wm;
+        if (draft.mode === 'later' && (!draft.time || draft.time < firstSlot(draft.day))) draft.time = firstSlot(draft.day);
+        renderWhen(); $(`[data-wm="${draft.mode}"]`, whenMenu).focus();
+      });
+      $$('[data-day]', whenMenu).forEach(b => b.onclick = () => {
+        draft.day = +b.dataset.day; if (draft.time < firstSlot(draft.day)) draft.time = firstSlot(draft.day);
+        renderWhen(); $(`[data-day="${draft.day}"]`, whenMenu).focus();
+      });
+      $$('[data-t]', whenMenu).forEach(b => b.onclick = () => { draft.time = +b.dataset.t; renderWhen(); $(`[data-t="${draft.time}"]`, whenMenu).focus(); });
+      $('[data-wdone]', whenMenu).onclick = () => { setWhen(draft.mode, draft.day, draft.time); openWhen(false); whenBtn.focus(); };
+      const on = $('.times [aria-pressed="true"]', whenMenu); if (on) on.scrollIntoView({ block: 'nearest' });
+    }
+    function openWhen(v) {
+      if (v) { draft = { ...WHEN }; renderWhen(); }
+      whenMenu.hidden = !v; whenBtn.setAttribute('aria-expanded', v);
+      if (v) $('[aria-pressed="true"]', whenMenu).focus();
+    }
+    whenBtn.onclick = e => { e.stopPropagation(); openWhen(whenMenu.hidden); };
+    whenMenu.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); openWhen(false); whenBtn.focus(); } });
+
+    /* ---------------- Sort menu ---------------- */
+    const SORTS = { best: ['Best match', 'Balances spaces, distance and price'], price: ['Cheapest', 'Lowest price per hour first'],
+      dist: ['Closest', 'Shortest drive first'], space: ['Most spaces', 'Most free spaces first'] };
+    const sortBtn = $('#sort-btn'), sortMenu = $('#sort-menu');
+    function openSort(v) {
+      if (v) sortMenu.innerHTML = Object.entries(SORTS).map(([k, [t, d]]) => `<button type="button" role="menuitemradio" aria-checked="${k === sortMode}" data-sort="${k}"><svg class="i ck"><use href="#i-check"/></svg><span><b>${t}</b><small>${d}</small></span></button>`).join('');
+      sortMenu.hidden = !v; sortBtn.setAttribute('aria-expanded', v);
+      if (v) $('[aria-checked="true"]', sortMenu).focus();
+      $$('[data-sort]', sortMenu).forEach(b => b.onclick = () => {
+        sortMode = b.dataset.sort; $('#sort-label').textContent = SORTS[sortMode][0];
+        openSort(false); sortBtn.focus(); renderList(); track('sort', { by: sortMode });
+      });
+    }
+    sortBtn.onclick = e => { e.stopPropagation(); openSort(sortMenu.hidden); };
+    sortMenu.addEventListener('keydown', e => {
+      const items = $$('[role="menuitemradio"]', sortMenu), i = items.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus(); }
+      if (e.key === 'Escape') { e.stopPropagation(); openSort(false); sortBtn.focus(); }
+    });
+    // menus re-render on click, so stop inside clicks here instead of testing contains() on a detached node
+    [whenMenu, sortMenu].forEach(m => m.addEventListener('click', e => e.stopPropagation()));
+    document.addEventListener('click', e => {
+      if (!whenMenu.hidden && !whenMenu.contains(e.target)) openWhen(false);
+      if (!sortMenu.hidden && !sortMenu.contains(e.target)) openSort(false);
     });
 
     const scn = $('#scn'), scnBtn = $('.scn-btn');
@@ -2053,7 +2395,7 @@
     const SCORE = l => (l.level === 'high' ? 0 : l.level === 'med' ? .7 : 1.6) + (l.dist || 0) * 1.1 + l.price * .5;
     function sortedIds() {
       const ls = Object.values(LOTS);
-      const by = { best: (a, b) => SCORE(a) - SCORE(b), price: (a, b) => a.price - b.price || a.dist - b.dist, dist: (a, b) => a.km - b.km }[sortMode];
+      const by = { best: (a, b) => SCORE(a) - SCORE(b), price: (a, b) => a.price - b.price || a.dist - b.dist, dist: (a, b) => a.km - b.km, space: (a, b) => b.free - a.free }[sortMode];
       return ls.sort(by).map(l => l.id);
     }
     const CHIPS = {
@@ -2103,7 +2445,7 @@
         $$('.lot', list).forEach(c => c.remove()); $('#empty').hidden = true;
         $('#found').textContent = 'Finding car parks near you…';
         for (let i = 0; i < 3; i++) list.insertAdjacentHTML('afterbegin', '<div class="skel" aria-hidden="true"><i></i><i></i><i></i></div>');
-      }
+      } else applyFilter();
     }
     function paintDist(id) {
       const l = LOTS[id], c = $(`.lot[data-id="${CSS.escape(id)}"] [data-dist]`);
@@ -2111,17 +2453,10 @@
       if (selected === id && pop.classList.contains('on')) { const s = $('.pop .sub', map); if (s) s.textContent = `${l.km} km · ${l.min} min drive · ${perHr(l)}`; }
     }
 
-    $$('.panel .seg button').forEach(b => b.onclick = () => {
-      $$('.panel .seg button').forEach(x => x.setAttribute('aria-pressed', x === b));
-      sortMode = b.dataset.sort; renderList(); track('sort', { by: sortMode });
-    });
-    $$('.amen input').forEach(i => i.addEventListener('change', () => {
-      const n = applyFilter(); track('filter', { amenity: i.value, on: i.checked });
-      toast(n ? `${n} lot${n > 1 ? 's' : ''} match your amenities` : 'No lots match these amenities', n ? 'check' : 'alert');
-    }));
-
-    function ctx() { $('#ctx').textContent = `Near ${centerLabel === 'Your location' ? 'you' : centerLabel} · ${$('#date').value}, ${$('#time').value}`; }
-    ['#date', '#time'].forEach(s => $(s).addEventListener('change', () => { ctx(); jitter(3); if (S.status === 'held') S.arrive = null; toast(`Availability refreshed for ${$('#date').value}, ${$('#time').value}`); }));
+    function ctx() {
+      const where = centerLabel === 'Your location' ? 'you' : centerLabel;
+      $('#ctx').textContent = `Near ${where} · ${WHEN.mode === 'now' ? 'arriving now' : `${dayLabel(WHEN.day)}, ${fmtT(WHEN.time)}`}`;
+    }
 
     /* ---------------- Simulated live availability ---------------- */
     let lastTick = Date.now();
@@ -2179,10 +2514,14 @@
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape') return;
       if (scn.classList.contains('open')) { toggleScn(false); scnBtn.focus(); }
+      else if (!whenMenu.hidden) { openWhen(false); whenBtn.focus(); }
+      else if (!sortMenu.hidden) { openSort(false); sortBtn.focus(); }
       else if (S.view) closeSheet();
     });
     $('#scrim').onclick = closeSheet;
 
+    setWhen('now', 0, 0, true);
+    syncClear();
     layout();
     renderCapsule();
     initMap();
