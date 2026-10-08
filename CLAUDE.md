@@ -3,7 +3,8 @@
 A smart parking finder for Jordan, currently in the **user-testing stage** (Stage 1).
 
 ## Layout
-- `index.html` — live test build. MapLibre + OpenFreeMap tiles, OpenStreetMap car parks via Overpass, Photon search, OSRM routes, and hand-off to Google Maps / Waze / Apple Maps. All external services are listed in `CONFIG` at the top of the script.
+- `index.html` — landing page: explains the idea and hands a search to the app as `app/?q=<place>`.
+- `app/index.html` — live test build. MapLibre + OpenFreeMap tiles, OpenStreetMap car parks via Overpass, Photon search, OSRM routes, and hand-off to Google Maps / Waze / Apple Maps. All external services are listed in `CONFIG` at the top of the script.
 - `shared/base.css` — reset and reduced-motion helpers.
 
 ## Rules
