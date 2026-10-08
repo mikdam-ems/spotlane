@@ -798,14 +798,14 @@
             <label class="field">
               <svg class="i"><use href="#i-cal"/></svg>
               <span class="fl"><small>Date</small>
-                <select id="date"><option>Jun 27</option><option selected>Jun 28</option><option>Jun 29</option><option>Jun 30</option></select>
+                <select id="date"></select>
               </span>
               <svg class="i chev"><use href="#i-chev"/></svg>
             </label>
             <label class="field">
               <svg class="i"><use href="#i-clock"/></svg>
               <span class="fl"><small>Time</small>
-                <select id="time"><option>6:30 PM</option><option>7:00 PM</option><option selected>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option><option>9:00 PM</option></select>
+                <select id="time"></select>
               </span>
               <svg class="i chev"><use href="#i-chev"/></svg>
             </label>
@@ -826,7 +826,7 @@
           <div class="panel-head">
             <span class="live"><i></i><span id="updated">Live · updated just now</span></span><span class="beta">Test version</span>
             <h1 id="found">We found <em>3 parking lots</em> near you</h1>
-            <p id="ctx">Near Zahran St · Jun 28, 7:30 PM</p>
+            <p id="ctx">Near Zahran St</p>
             <span class="src" id="src">Loading car parks…</span>
             <div class="seg" role="group" aria-label="Sort results">
               <button type="button" data-sort="best" aria-pressed="true">Best match</button>
@@ -840,7 +840,7 @@
               <h3>No lots available right now</h3>
               <p>Everything nearby is full or doesn't match your filters for this time.</p>
               <div class="chips">
-                <button type="button" class="opt" data-fix="time">Try 8:00 PM</button>
+                <button type="button" class="opt" data-fix="time">Try 1 hour later</button>
                 <button type="button" class="opt" data-fix="radius">Widen to 2 km</button>
                 <button type="button" class="opt" data-fix="clear">Clear filters</button>
               </div>
@@ -1244,6 +1244,29 @@
     const mmss = s => `${Math.floor(s / 60)}:${pad(s % 60)}`;
     const toMin = t => { const m = t.match(/(\d+):(\d+)\s*(AM|PM)/); return (+m[1] % 12 + (m[3] === 'PM' ? 12 : 0)) * 60 + +m[2]; };
     const fmtT = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; const h = Math.floor(m / 60); return `${h % 12 || 12}:${pad(m % 60)} ${h < 12 ? 'AM' : 'PM'}`; };
+
+    // Date and time pickers: the next 7 days starting today, and times from now on (every 30 min, last 11:30 PM).
+    // Option values stay plain text ("Today, Oct 8", "7:45 PM") because the booking sheets print them as-is.
+    const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const isToday = () => $('#date').selectedIndex <= 0;
+    const isNow = () => isToday() && $('#time').selectedIndex <= 0;
+    const nowMin = () => { const d = new Date(); return Math.min(1435, Math.ceil((d.getHours() * 60 + d.getMinutes()) / 5) * 5); };
+    function fillTimes(want) {
+      const opts = isToday() ? [[nowMin(), 'Now']] : [];
+      for (let m = isToday() ? Math.ceil((nowMin() + 1) / 30) * 30 : 6 * 60; m <= 23 * 60 + 30; m += 30) opts.push([m, fmtT(m)]);
+      $('#time').innerHTML = opts.map(([m, t]) => `<option value="${fmtT(m)}">${t}</option>`).join('');
+      if (want != null) { const i = opts.findIndex(([m]) => m >= want); $('#time').selectedIndex = i < 0 ? opts.length - 1 : i; }
+    }
+    function fillDates() {
+      const d0 = new Date();
+      $('#date').innerHTML = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + i);
+        return `<option>${i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : DOW[d.getDay()]}, ${MON[d.getMonth()]} ${d.getDate()}</option>`;
+      }).join('');
+      fillTimes();
+    }
+    fillDates();
+    $('#date').addEventListener('change', () => fillTimes(toMin($('#time').value)));
     const hm = min => { min = Math.abs(Math.round(min)); return `${Math.floor(min / 60)}:${pad(min % 60)}`; };
     const durTxt = min => [min >= 60 ? `${Math.floor(min / 60)}h` : '', min % 60 ? `${min % 60}m` : ''].filter(Boolean).join(' ') || '0m';
     const nth = n => n + (['th', 'st', 'nd', 'rd'][n] || 'th');
@@ -1976,11 +1999,11 @@
     $$('[data-fix]').forEach(b => b.onclick = () => {
       const f = b.dataset.fix; emptyScn = false;
       emptyReason("Everything nearby is full or doesn't match your filters for this time.");
-      if (f === 'time') { $('#time').value = '8:00 PM'; ctx(); }
+      if (f === 'time') { fillTimes(toMin($('#time').value) + 60); ctx(); }
       if (f === 'clear') $$('.amen input').forEach(i => i.checked = true);
       if (f === 'radius') { CONFIG.searchRadius = Math.min(6000, CONFIG.searchRadius * 2); return loadLots(center).then(() => toast(`Search widened to ${(CONFIG.searchRadius / 1000).toFixed(1)} km`)); }
       const n = applyFilter();
-      toast(f === 'time' ? `Showing lots for 8:00 PM · ${n} found` : `Filters cleared · ${n} lots found`);
+      toast(f === 'time' ? `Showing lots for ${$('#time').value} · ${n} found` : `Filters cleared · ${n} lots found`);
       const first = sortedIds().find(id => LOTS[id].visible); if (first) select(first);
     });
 
@@ -2117,7 +2140,7 @@
       toast(n ? `${n} lot${n > 1 ? 's' : ''} match your amenities` : 'No lots match these amenities', n ? 'check' : 'alert');
     }));
 
-    function ctx() { $('#ctx').textContent = `Near ${centerLabel === 'Your location' ? 'you' : centerLabel} · ${$('#date').value}, ${$('#time').value}`; }
+    function ctx() { $('#ctx').textContent = `Near ${centerLabel === 'Your location' ? 'you' : centerLabel} · ${isNow() ? 'Now' : `${$('#date').value}, ${$('#time').value}`}`; }
     ['#date', '#time'].forEach(s => $(s).addEventListener('change', () => { ctx(); jitter(3); if (S.status === 'held') S.arrive = null; toast(`Availability refreshed for ${$('#date').value}, ${$('#time').value}`); }));
 
     /* ---------------- Simulated live availability ---------------- */
