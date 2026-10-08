@@ -467,6 +467,17 @@
     .qr.big { width: 180px; height: 180px; }
     .pass-meta { display: grid; gap: 9px; font-size: 13px; min-width: 0; }
     .pass-meta span { display: block; font-size: 11px; color: var(--mute); font-weight: 600; }
+    .pass-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .pass-acts .btn { height: 44px; border-radius: 14px; }
+    .manage { display: grid; border: 1px solid var(--line); border-radius: 16px; background: #fff; overflow: hidden; }
+    .manage button { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 0; border-top: 1px solid var(--line); background: none; text-align: left; font-weight: 700; font-size: 14px; color: var(--ink); }
+    .manage button:first-child { border-top: 0; }
+    .manage button:hover { background: #F8FAFC; }
+    .manage button svg.i { color: var(--indigo); flex: none; }
+    .manage button span { display: grid; }
+    .manage small { font-size: 12px; font-weight: 500; color: var(--mute); }
+    .manage .danger, .manage .danger svg.i { color: #DC2626; }
+    .inp.code { letter-spacing: .5em; font-size: 20px; text-align: center; }
     .act-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .act { display: grid; justify-items: center; gap: 6px; padding: 10px 4px; border-radius: 14px; border: 1px solid var(--line); background: #fff; font-size: 11.5px; font-weight: 700; color: var(--ink-2); }
     .act svg.i { color: var(--indigo); }
@@ -1413,13 +1424,14 @@
     // Free cancellation ends 15 min before arrival; a booking that starts sooner than that never had it.
     const freeCancel = () => !isToday() || S.arrive - 15 > nowMin();
     const cancelLine = () => freeCancel() ? `Free cancellation until <b>${fmtT(S.arrive - 15)}</b>.` : `You arrive within 15 minutes, so free cancellation doesn't apply.`;
+    const CONTACT_HINT = 'We text your entry pass here, so no ticket or sign-up is needed. An email works too.';
     const PLATE_KEY = 'spotlane-plate';                              // kept on this device only, never sent to track()
     const savedPlate = () => { try { return JSON.parse(localStorage.getItem(PLATE_KEY)) || {}; } catch (e) { return {}; } };
     const fresh = () => ({
       lot: null, lotObj: null, floor: '', slot: '', status: 'idle', view: null, navigating: false,
       arrive: null, hours: 2, plate: savedPlate().plate || '', region: savedPlate().region || 'JO', size: 'std', ev: false, modifying: false,
       showBay: false, showOpts: false, holdOn: false,
-      contact: '', pay: 'card', cnum: '4242 4242 4242 4242', cexp: '08 / 29', ccvc: '123', paid: 0, id: '', error: null, confirmCancel: false,
+      contact: '', pay: 'express', showManage: false, code: '', cnum: '4242 4242 4242 4242', cexp: '08 / 29', ccvc: '123', paid: 0, id: '', error: null, confirmCancel: false,
       arrived: false, gate: 'idle', showQr: false, reassigned: false,
       elapsed: 0, ext: 0, extPaid: 0, extSel: 60, lateFee: 0, kwh: 0, charging: false, lowWarned: false,
       rating: 0, tags: new Set(), account: 'offer'
@@ -1675,8 +1687,8 @@
           ? `<div class="alert red"><div class="alert-top">${ico('alert')}<div><b>${err.slot} was just taken</b>Another driver booked it a moment ago — you haven't been charged.${err.alt ? ` <b style="display:inline;font-size:inherit">${err.alt}</b> is free on the same floor, same price.` : ''}</div></div>
               <div class="row-a">${err.alt ? `<button type="button" class="btn primary" data-err="alt">Take ${err.alt}</button>` : ''}<button type="button" class="btn ghost" data-err="pick">Choose another slot</button></div></div>`
           : err.type === 'declined'
-          ? `<div class="alert red"><div class="alert-top">${ico('card')}<div><b>Payment declined</b>Your bank didn't approve this payment, so you haven't been charged. Try Express pay or another card.</div></div>
-              <div class="row-a"><button type="button" class="btn primary" data-err="express">Use Express pay</button><button type="button" class="btn ghost" data-err="card">Edit card</button></div></div>`
+          ? `<div class="alert red"><div class="alert-top">${ico('card')}<div><b>Payment declined</b>Your bank didn't approve this payment, so you haven't been charged. ${S.pay === 'express' ? 'Try a card instead.' : 'Try Apple Pay / Google Pay or another card.'}</div></div>
+              <div class="row-a">${S.pay === 'express' ? `<button type="button" class="btn primary" data-err="card">Pay by card</button>` : `<button type="button" class="btn primary" data-err="express">Use phone wallet</button><button type="button" class="btn ghost" data-err="card">Edit card</button>`}</div></div>`
           : `<div class="alert amber"><div class="alert-top">${ico('timer')}<div><b>Your hold expired</b>We released ${S.slot} after 15 minutes. It's still free right now — hold it again to finish booking.</div></div>
               <div class="row-a"><button type="button" class="btn primary" data-err="rehold">Hold ${S.slot} again</button></div></div>`;
         return {
@@ -1691,26 +1703,26 @@
               <div class="sum-row"><span>Vehicle</span><b><span class="pass-plate">${S.region} ${esc(S.plate)}</span></b></div>
               ${S.ev && l.kw ? `<div class="sum-row"><span>EV charging</span><b>${l.kw} kW reserved</b></div>` : ''}
             </div>
-            <div class="sec"><h3>Send my pass &amp; receipt to</h3>
-              <div class="fld"><input class="inp" id="guest-contact" type="text" inputmode="email" autocomplete="email" value="${esc(S.contact)}" placeholder="Email or mobile number" aria-label="Email or mobile number" aria-describedby="contact-msg">
-              <span class="hint" id="contact-msg">We'll text or email your entry pass. No password, no sign-up.</span></div></div>
+            <div class="sec"><h3>Your mobile number</h3>
+              <div class="fld"><input class="inp" id="guest-contact" type="text" inputmode="tel" autocomplete="tel" value="${esc(S.contact)}" placeholder="07X XXX XXXX" aria-label="Mobile number or email" aria-describedby="contact-msg">
+              <span class="hint" id="contact-msg">${CONTACT_HINT}</span></div></div>
             <div class="sec"><h3>Payment</h3>
               <div class="pay-opts" role="radiogroup" aria-label="Payment method">
-                <label class="pay-opt"><input type="radio" name="pay" value="express" ${S.pay === 'express' ? 'checked' : ''}><span class="ic-box indigo">${ico('wallet')}</span><span>Express pay<small>Phone wallet · confirm with face or fingerprint</small></span><span class="rd"></span></label>
+                <label class="pay-opt"><input type="radio" name="pay" value="express" ${S.pay === 'express' ? 'checked' : ''}><span class="ic-box indigo">${ico('wallet')}</span><span>Apple Pay / Google Pay<small>Confirm with your face or fingerprint</small></span><span class="rd"></span></label>
                 <label class="pay-opt"><input type="radio" name="pay" value="card" ${S.pay === 'card' ? 'checked' : ''}><span class="ic-box indigo">${ico('card')}</span><span>Credit or debit card<small>Visa, Mastercard, Amex</small></span><span class="rd"></span></label>
               </div>
               ${S.pay === 'card' ? `<div class="card-fields">
                 <input class="inp full num" id="cnum" value="${esc(S.cnum)}" inputmode="numeric" autocomplete="cc-number" placeholder="Card number" aria-label="Card number">
                 <input class="inp num" id="cexp" value="${esc(S.cexp)}" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" aria-label="Expiry date">
                 <input class="inp num" id="ccvc" value="${esc(S.ccvc)}" inputmode="numeric" autocomplete="cc-csc" placeholder="CVC" aria-label="Security code"></div>
-                <span class="hint">Test mode — no real payment is taken. A demo card is pre-filled.</span>` : ''}
+                <span class="hint">Test mode — no real payment is taken. A demo card is pre-filled.</span>` : `<span class="hint">Test mode — no real payment is taken, and your wallet isn't opened.</span>`}
             </div>
             ${billRows(due)}
             <div class="note">${ico('lock')}<span>Encrypted payment. ${freeCancel() ? `Cancel free until <b>${fmtT(S.arrive - 15)}</b> for a full refund.` : `You arrive within 15 minutes, so free cancellation doesn't apply.`}</span></div>`,
           foot: `<button type="button" class="btn primary" data-pay>${ico(S.pay === 'express' ? 'wallet' : 'lock')}${due >= 0 ? `Pay <span class="num">${money(due)}</span>` : `Confirm · refund <span class="num">${money(-due)}</span>`}</button>
             <small>${S.status === 'held' && S.holdOn && holdLeft > 0 ? `We're keeping ${S.slot} for you · <b class="num" data-holdtxt>${mmss(holdLeft)}</b> · ` : ''}By paying you agree to the garage's parking terms.</small>`,
           bind(root) {
-            on(root, '#guest-contact', 'input', e => { S.contact = e.target.value.trim(); e.target.classList.remove('bad'); const m = $('#contact-msg', root); m.classList.remove('bad'); m.textContent = "We'll text or email your entry pass. No password, no sign-up."; });
+            on(root, '#guest-contact', 'input', e => { S.contact = e.target.value.trim(); e.target.classList.remove('bad'); const m = $('#contact-msg', root); m.classList.remove('bad'); m.textContent = CONTACT_HINT; });
             on(root, 'input[name="pay"]', 'change', e => { S.pay = e.target.value; S.error = null; rerender(); });
             [['#cnum', 'cnum'], ['#cexp', 'cexp'], ['#ccvc', 'ccvc']].forEach(([sel, k]) => on(root, sel, 'input', e => { S[k] = e.target.value; e.target.classList.remove('bad'); }));
             on(root, '[data-err]', 'click', e => {
@@ -1718,7 +1730,7 @@
               if (a === 'alt') { S.slot = err.alt; toast(`Switched to ${err.alt} · same floor, same price`); select(S.lot); rerender(); }
               else if (a === 'pick') { S.showBay = true; openSheet('details'); }
               else if (a === 'express') { S.pay = 'express'; rerender(); }
-              else if (a === 'card') { rerender(); $('#cnum', sheet)?.focus(); }
+              else if (a === 'card') { S.pay = 'card'; rerender(); $('#cnum', sheet)?.focus(); }
               else if (a === 'rehold') { holdLeft = HOLD; renderCapsule(); toast(`${S.slot} held again for 15 min`, 'timer'); rerender(); }
             });
             $('[data-pay]', root).onclick = e => pay(e.currentTarget, root);
@@ -1741,27 +1753,31 @@
                   <div><span>Entrance</span><b>${l.entrance}</b></div>
                 </div></div>
             </div>
-            <div class="act-row">
-              <button type="button" class="act" data-a="wallet">${ico('wallet')}Add to wallet</button>
-              <button type="button" class="act" data-a="share">${ico('share')}Share</button>
-              <button type="button" class="act" data-a="modify">${ico('edit')}Modify</button>
-              <button type="button" class="act danger" data-a="cancel">${ico('x')}Cancel</button>
+            <div class="pass-acts">
+              <button type="button" class="btn ghost" data-a="wallet">${ico('wallet')}Add to wallet</button>
+              <button type="button" class="btn ghost" data-a="manage" aria-expanded="${S.showManage}">${ico('edit')}Manage</button>
             </div>
+            ${S.showManage ? `<div class="manage" role="group" aria-label="Manage booking">
+              <button type="button" data-a="modify">${ico('edit')}<span>Change time or bay<small>You only pay, or get back, the difference</small></span></button>
+              <button type="button" data-a="share">${ico('share')}<span>Share with a passenger<small>Send the bay and time</small></span></button>
+              <button type="button" class="danger" data-a="cancel">${ico('x')}<span>Cancel booking</span></button>
+            </div>` : ''}
             ${S.confirmCancel ? `<div class="alert red"><div class="alert-top">${ico('alert')}<div><b>Cancel this booking?</b>${freeCancel() ? `It's free until ${fmtT(S.arrive - 15)}. ${money(S.paid + S.lateFee)} goes back to your ${payName()} in 3–5 days.` : `Bookings that start within 15 minutes aren't normally refunded. In this test, ${money(S.paid + S.lateFee)} still goes back to your ${payName()}.`}</div></div>
               <div class="row-a"><button type="button" class="btn danger" data-a="cancel-yes">Yes, cancel booking</button><button type="button" class="btn ghost" data-a="cancel-no">Keep it</button></div></div>` : ''}
             <div class="note">${ico('clock')}<span>Running late? ${S.slot} stays yours until <b>${fmtT(S.arrive + 15)}</b>. We'll message you before it's released.</span></div>
-            <ul class="check-list"><li>${ico('check')}No ticket — the barrier reads your plate</li><li>${ico('check')}QR code works as a backup at the gate</li><li>${ico('check')}Extend your time from your phone</li></ul>`,
+`,
           foot: `<button type="button" class="btn primary" data-go>${ico('nav')}Start Navigation</button><button type="button" class="btn text" data-here>I'm already at the garage</button>`,
           bind(root) {
             on(root, '[data-a]', 'click', e => {
               const a = e.currentTarget.dataset.a;
-              if (a === 'wallet') toast('Pass added to your phone wallet', 'wallet');
+              if (a === 'wallet') toast('Pass added to your phone wallet (test)', 'wallet');
+              if (a === 'manage') { S.showManage = !S.showManage; S.confirmCancel = false; if (S.showManage) track('manage_open'); rerender(); }
               if (a === 'share') {
                 const text = `Parking at ${l.short}, ${S.floor} · ${S.slot}, ${fmtT(S.arrive)}`;
                 if (navigator.share) navigator.share({ title: 'Parking pass', text }).catch(() => {}); else toast('Pass link copied — share it with your passenger', 'share');
               }
-              if (a === 'modify') { S.modifying = true; S.confirmCancel = false; openSheet('details'); }
-              if (a === 'cancel') { S.confirmCancel = true; rerender(); }
+              if (a === 'modify') { S.modifying = true; S.confirmCancel = false; S.showManage = false; openSheet('details'); }
+              if (a === 'cancel') { S.confirmCancel = true; S.showManage = false; rerender(); }
               if (a === 'cancel-no') { S.confirmCancel = false; rerender(); }
               if (a === 'cancel-yes') resetJourney(`Booking cancelled · ${money(S.paid + S.lateFee)} refunded to your ${payName()}`);
             });
@@ -1884,22 +1900,33 @@
             </div>
             ${S.account === 'offer' ? `<div class="nudge">
                 <span class="ic-box indigo">${ico('user')}</span>
-                <h4>Book in one tap next time</h4>
-                <p>Save <b class="pass-plate">${S.region} ${esc(S.plate)}</b>, your ${payName()} and this receipt. Just add a password — we already have ${esc(S.contact)}.</p>
-                <input class="inp" type="password" id="pw" placeholder="Create a password (8+ characters)" autocomplete="new-password" aria-label="Create a password" aria-describedby="pw-msg">
-                <span class="hint" id="pw-msg">Your receipt is already on its way, with or without an account.</span>
-                <div class="row-a"><button type="button" class="btn primary" data-acct>Create free account</button><button type="button" class="btn text" data-skip>Not now</button></div>
+                <h4>Save for next time</h4>
+                <p>Keep <b class="pass-plate">${S.region} ${esc(S.plate)}</b>, your ${payName()} and your receipts, so next time is one tap. No password: we send a one-time code to ${esc(S.contact)}.</p>
+                <div class="row-a"><button type="button" class="btn primary" data-acct="send">Send me a code</button><button type="button" class="btn text" data-skip>Not now</button></div>
               </div>`
-            : S.account === 'created' ? `<div class="alert green"><div class="alert-top">${ico('check')}<div><b>Account created</b>Your plate, ${payName()} and parking history are saved. Next time it's one tap.</div></div></div>` : ''}`,
+            : S.account === 'code' ? `<div class="nudge">
+                <span class="ic-box indigo">${ico('lock')}</span>
+                <h4>Enter the 4-digit code</h4>
+                <p>We sent it to ${esc(S.contact)}.</p>
+                <input class="inp num code" id="otp" value="${esc(S.code)}" inputmode="numeric" autocomplete="one-time-code" maxlength="4" placeholder="• • • •" aria-label="4-digit code" aria-describedby="otp-msg">
+                <span class="hint" id="otp-msg">Test mode: no message is sent. Any 4 digits work.</span>
+                <div class="row-a"><button type="button" class="btn primary" data-acct="verify">Save my details</button><button type="button" class="btn text" data-acct="resend">Send again</button></div>
+              </div>`
+            : S.account === 'created' ? `<div class="alert green"><div class="alert-top">${ico('check')}<div><b>Details saved</b>Your plate, ${payName()} and parking history are saved. Next time it's one tap.</div></div></div>` : ''}`,
           foot: `<button type="button" class="btn primary" data-done>Done</button>`,
           bind(root) {
             on(root, '[data-star]', 'click', e => { S.rating = +e.currentTarget.dataset.star; track('rating', { stars: S.rating }); rerender(); });
             on(root, '[data-tag]', 'click', e => { const t = e.currentTarget.dataset.tag; S.tags.has(t) ? S.tags.delete(t) : S.tags.add(t); rerender(); });
-            $('[data-acct]', root)?.addEventListener('click', () => {
-              const pw = $('#pw', root);
-              if (pw.value.length < 8) { pw.classList.add('bad'); const m = $('#pw-msg', root); m.classList.add('bad'); m.textContent = 'Use at least 8 characters.'; pw.focus(); return; }
-              S.account = 'created'; track('account_created'); rerender(); toast('Account created — welcome to Spotlane', 'user');
+            on(root, '[data-acct]', 'click', e => {
+              const a = e.currentTarget.dataset.acct;
+              if (a === 'send') { S.account = 'code'; S.code = ''; track('account_code_sent'); rerender(); $('#otp', sheet)?.focus(); }
+              if (a === 'resend') toast('New code sent (test)', 'lock');
+              if (a === 'verify') {
+                if (!/^\d{4}$/.test(S.code)) { const i = $('#otp', root), m = $('#otp-msg', root); i.classList.add('bad'); m.classList.add('bad'); m.textContent = 'Enter the 4 digits from the message.'; i.focus(); return; }
+                S.account = 'created'; track('account_created'); rerender(); toast('Details saved. Next time is one tap', 'user');
+              }
             });
+            on(root, '#otp', 'input', e => { S.code = e.target.value.replace(/\D/g, '').slice(0, 4); e.target.value = S.code; e.target.classList.remove('bad'); });
             $('[data-skip]', root)?.addEventListener('click', () => { S.account = 'skipped'; rerender(); });
             $('[data-done]', root).onclick = () => resetJourney(S.rating ? 'Thanks for the feedback!' : 'See you next time');
           }
