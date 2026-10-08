@@ -1078,9 +1078,12 @@
       renderList();
       const keep = S.lot && LOTS[S.lot] ? S.lot : null, first = sortedIds().find(id => LOTS[id].visible);
       selected = null; pop.classList.remove('on');
-      if (keep || first) select(keep || first);
+      if (keep) select(keep); else autoSelect(first);
       fitView();
     }
+    // On wide screens the best match opens beside the list. On phones nothing opens until the driver taps:
+    // the card would cover half the map before they've chosen anything.
+    function autoSelect(id) { if (id && !isStacked()) select(id); }
     function addPin(l) {
       const b = document.createElement('button');
       b.type = 'button'; b.className = `pin ${l.level}`; b.dataset.id = l.id;
@@ -1874,7 +1877,7 @@
     function resetJourney(msg) {
       S = fresh(); taken.clear(); holdLeft = HOLD;
       closeSheet(); hideNotice(); updateBookButtons();
-      const first = sortedIds().find(id => LOTS[id].visible); if (first) select(first);
+      autoSelect(sortedIds().find(id => LOTS[id].visible));
       renderCapsule();
       if (msg) toast(msg);
     }
@@ -2002,7 +2005,7 @@
       if (f === 'radius') { CONFIG.searchRadius = Math.min(6000, CONFIG.searchRadius * 2); return loadLots(center).then(() => toast(`Search widened to ${(CONFIG.searchRadius / 1000).toFixed(1)} km`)); }
       const n = applyFilter();
       toast(f === 'time' ? `Showing lots for ${$('#time').value} · ${n} found` : `Filters cleared · ${n} lots found`);
-      const first = sortedIds().find(id => LOTS[id].visible); if (first) select(first);
+      autoSelect(sortedIds().find(id => LOTS[id].visible));
     });
 
     const scn = $('#scn'), scnBtn = $('.scn-btn');
