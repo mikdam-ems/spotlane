@@ -1410,12 +1410,15 @@
     const cleanPlate = v => v.replace(/[\s-]/g, '').toUpperCase();
     const validPlate = v => /^[A-Z0-9]{2,8}$/.test(cleanPlate(v));
 
+    // Free cancellation ends 15 min before arrival; a booking that starts sooner than that never had it.
+    const freeCancel = () => !isToday() || S.arrive - 15 > nowMin();
+    const cancelLine = () => freeCancel() ? `Free cancellation until <b>${fmtT(S.arrive - 15)}</b>.` : `You arrive within 15 minutes, so free cancellation doesn't apply.`;
     const PLATE_KEY = 'spotlane-plate';                              // kept on this device only, never sent to track()
     const savedPlate = () => { try { return JSON.parse(localStorage.getItem(PLATE_KEY)) || {}; } catch (e) { return {}; } };
     const fresh = () => ({
       lot: null, lotObj: null, floor: '', slot: '', status: 'idle', view: null, navigating: false,
       arrive: null, hours: 2, plate: savedPlate().plate || '', region: savedPlate().region || 'JO', size: 'std', ev: false, modifying: false,
-      showBay: false, showOpts: false,
+      showBay: false, showOpts: false, holdOn: false,
       contact: '', pay: 'card', cnum: '4242 4242 4242 4242', cexp: '08 / 29', ccvc: '123', paid: 0, id: '', error: null, confirmCancel: false,
       arrived: false, gate: 'idle', showQr: false, reassigned: false,
       elapsed: 0, ext: 0, extPaid: 0, extSel: 60, lateFee: 0, kwh: 0, charging: false, lowWarned: false,
@@ -1628,9 +1631,9 @@
               ? `<div class="note">${ico('check')}<span>We'll keep an XL bay (up to 5.4 m) for you at no extra cost.</span></div>`
               : `<div class="alert amber"><div class="alert-top">${ico('alert')}<div><b>No XL bays here</b>${esc(l.short)} has standard bays only. Multi-storey car parks usually fit longer vehicles.</div></div></div>`) : ''}
             ${billRows(due)}
-            <div class="note">${ico('clock')}<span>Free cancellation until <b>${fmtT(S.arrive - 15)}</b>. Running late? Your slot stays yours until <b>${fmtT(S.arrive + 15)}</b>.</span></div>`,
+            <div class="note">${ico('clock')}<span>${cancelLine()} Running late? Your slot stays yours until <b>${fmtT(S.arrive + 15)}</b>.</span></div>`,
           foot: `<button type="button" class="btn primary" data-next>Continue to checkout · <span class="num">${money(Math.abs(due))}</span></button>
-            <small>${S.status === 'held' ? `${S.slot} held for you · <b class="num" data-holdtxt>${mmss(holdLeft)}</b>` : 'No account needed'}</small>`,
+            <small>No account needed</small>`,
           bind(root) {
             on(root, '[data-arr]', 'click', e => { S.arrive = +e.currentTarget.dataset.arr; rerender(); });
             on(root, '[data-hrs]', 'click', e => { S.hours = Math.min(12, Math.max(1, S.hours + +e.currentTarget.dataset.hrs)); rerender(); });
@@ -1659,6 +1662,7 @@
                 return;
               }
               try { localStorage.setItem(PLATE_KEY, JSON.stringify({ plate: S.plate, region: S.region })); } catch (e) {}
+              if (S.status === 'held' && !S.holdOn) { S.holdOn = true; holdLeft = HOLD; renderCapsule(); }   // the hold starts at checkout
               openSheet('checkout');
             };
           }
@@ -1702,9 +1706,9 @@
                 <span class="hint">Test mode — no real payment is taken. A demo card is pre-filled.</span>` : ''}
             </div>
             ${billRows(due)}
-            <div class="note">${ico('lock')}<span>Encrypted payment. Cancel free until <b>${fmtT(S.arrive - 15)}</b> for a full refund.</span></div>`,
+            <div class="note">${ico('lock')}<span>Encrypted payment. ${freeCancel() ? `Cancel free until <b>${fmtT(S.arrive - 15)}</b> for a full refund.` : `You arrive within 15 minutes, so free cancellation doesn't apply.`}</span></div>`,
           foot: `<button type="button" class="btn primary" data-pay>${ico(S.pay === 'express' ? 'wallet' : 'lock')}${due >= 0 ? `Pay <span class="num">${money(due)}</span>` : `Confirm · refund <span class="num">${money(-due)}</span>`}</button>
-            <small>By paying you agree to the garage's parking terms.</small>`,
+            <small>${S.status === 'held' && S.holdOn && holdLeft > 0 ? `We're keeping ${S.slot} for you · <b class="num" data-holdtxt>${mmss(holdLeft)}</b> · ` : ''}By paying you agree to the garage's parking terms.</small>`,
           bind(root) {
             on(root, '#guest-contact', 'input', e => { S.contact = e.target.value.trim(); e.target.classList.remove('bad'); const m = $('#contact-msg', root); m.classList.remove('bad'); m.textContent = "We'll text or email your entry pass. No password, no sign-up."; });
             on(root, 'input[name="pay"]', 'change', e => { S.pay = e.target.value; S.error = null; rerender(); });
@@ -1743,7 +1747,7 @@
               <button type="button" class="act" data-a="modify">${ico('edit')}Modify</button>
               <button type="button" class="act danger" data-a="cancel">${ico('x')}Cancel</button>
             </div>
-            ${S.confirmCancel ? `<div class="alert red"><div class="alert-top">${ico('alert')}<div><b>Cancel this booking?</b>It's free until ${fmtT(S.arrive - 15)}. ${money(S.paid + S.lateFee)} goes back to your ${payName()} in 3–5 days.</div></div>
+            ${S.confirmCancel ? `<div class="alert red"><div class="alert-top">${ico('alert')}<div><b>Cancel this booking?</b>${freeCancel() ? `It's free until ${fmtT(S.arrive - 15)}. ${money(S.paid + S.lateFee)} goes back to your ${payName()} in 3–5 days.` : `Bookings that start within 15 minutes aren't normally refunded. In this test, ${money(S.paid + S.lateFee)} still goes back to your ${payName()}.`}</div></div>
               <div class="row-a"><button type="button" class="btn danger" data-a="cancel-yes">Yes, cancel booking</button><button type="button" class="btn ghost" data-a="cancel-no">Keep it</button></div></div>` : ''}
             <div class="note">${ico('clock')}<span>Running late? ${S.slot} stays yours until <b>${fmtT(S.arrive + 15)}</b>. We'll message you before it's released.</span></div>
             <ul class="check-list"><li>${ico('check')}No ticket — the barrier reads your plate</li><li>${ico('check')}QR code works as a backup at the gate</li><li>${ico('check')}Extend your time from your phone</li></ul>`,
@@ -1966,7 +1970,7 @@
       if (S.status === 'done') S = fresh();
       if (id !== S.lot || S.status === 'idle') {
         const l = LOTS[id];
-        Object.assign(S, { lot: id, lotObj: l, floor: l.floor, slot: l.slot, error: null, ev: false, status: 'held', arrive: null, showBay: false, showOpts: false, bayPicked: false });   // EV charging is opt-in: it adds a cost
+        Object.assign(S, { lot: id, lotObj: l, floor: l.floor, slot: l.slot, error: null, ev: false, status: 'held', arrive: null, showBay: false, showOpts: false, bayPicked: false, holdOn: false });   // EV charging is opt-in: it adds a cost
         holdLeft = HOLD;
         track('hold', { lot: id, level: l.level, source: l.source });
       }
@@ -2054,8 +2058,8 @@
         if (S.arrived) { set('#cap-eta', 'Arrived'); set('#cap-dist', '0 km'); }
         else { set('#cap-eta', locOff ? '—' : `${l.min} min${l.min > 1 ? 's' : ''}`); set('#cap-dist', locOff ? '—' : `${l.km} km`); }
         if (S.status === 'held') {
-          hold.className = `hold num${holdLeft <= 0 ? ' exp' : ''}`;
-          set('#hold', holdLeft > 0 ? mmss(holdLeft) : 'Expired');
+          hold.className = `hold num${S.holdOn && holdLeft <= 0 ? ' exp' : ''}`;
+          set('#hold', !S.holdOn ? '' : holdLeft > 0 ? mmss(holdLeft) : 'Expired');
           cta = holdLeft > 0 ? ['check', 'Complete booking'] : ['timer', 'Hold again'];
         } else {
           hold.className = 'hold num paid'; set('#hold', 'Paid');
@@ -2174,7 +2178,7 @@
     const SCN = {
       loc: () => setLocOff(true),
       empty: () => { emptyScn = true; applyFilter(); if (isStacked()) $('#empty').scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' }); },
-      hold: () => { if (!needHeld()) return; holdLeft = 6; renderCapsule(); toast(`Hold on ${S.slot} ends in a few seconds…`, 'timer'); },
+      hold: () => { if (!needHeld()) return; S.holdOn = true; holdLeft = 6; renderCapsule(); toast(`Hold on ${S.slot} ends in a few seconds…`, 'timer'); },
       taken: () => { if (!needHeld()) return; scenario.slotTaken = true; startBooking(S.lot); toast('Continue and pay — another driver will grab your slot', 'alert'); },
       declined: () => { if (!needHeld()) return; scenario.declined = true; startBooking(S.lot); toast('Continue and pay — the card will be declined', 'card'); },
       late: () => { if (S.status !== 'paid' || S.arrived) return toast('Book a spot first, then try running late', 'alert'); runningLate(); },
@@ -2203,7 +2207,7 @@
       }
     }
     setInterval(() => {
-      if (S.status === 'held' && holdLeft > 0) { holdLeft--; if (!holdLeft) holdExpired(); }
+      if (S.status === 'held' && S.holdOn && holdLeft > 0) { holdLeft--; if (!holdLeft) holdExpired(); }
       if (S.status === 'parked') {
         S.elapsed++;
         const l = LOTS[S.lot];
