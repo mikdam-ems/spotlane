@@ -33,13 +33,13 @@ If it's left empty, feedback is copied to the tester's clipboard.
 
 ## Running sessions
 
-- **Give feedback** (top right) collects:
+- **Feedback** (top right of the map) collects:
   - a 1–5 ease rating
   - what the tester was trying to do
   - their comments
   - the tester's steps, such as "hold", "paid" or "nav_handoff"
 - The step log never includes location or contact details.
-- **Scenarios** lets a moderator trigger edge cases on purpose, such as a slot taken at checkout, a declined payment or an expired hold.
+- **Scenarios** (only shown when the link ends in `?moderator=1`) lets a moderator trigger edge cases on purpose, such as a slot taken at checkout, a declined payment or an expired hold.
 - To send events to an analytics tool (PostHog, a Supabase function…), set `CONFIG.analyticsEndpoint`.
 
 ## Free-tier limits (fine for testing, not for launch)
