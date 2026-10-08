@@ -197,7 +197,7 @@
           </form>
           <div class="quick">
             <small>Try:</small>
-            <a class="chip" href="app/"><svg class="i"><use href="#i-locate"/></svg>Near me</a>
+            <a class="chip" href="app/?near=1"><svg class="i"><use href="#i-locate"/></svg>Near me</a>
             <a class="chip" href="app/?q=Abdali%20Boulevard">Abdali Boulevard</a>
             <a class="chip" href="app/?q=Rainbow%20Street">Rainbow Street</a>
             <a class="chip" href="app/?q=Shmeisani">Shmeisani</a>
@@ -277,7 +277,7 @@
         <div>
           <h2 id="where-h">Testing now in Amman</h2>
           <p class="sub" style="margin-bottom:20px">We're testing with drivers in central Amman first. Partner garages join from early 2027.</p>
-          <a class="btn primary" href="app/">See car parks near me<svg class="i"><use href="#i-arrow"/></svg></a>
+          <a class="btn primary" href="app/?near=1">See car parks near me<svg class="i"><use href="#i-arrow"/></svg></a>
         </div>
         <ul class="areas" aria-label="Areas in the test">
           <li>Abdali</li><li>Shmeisani</li><li>Jabal Amman</li><li>Rainbow Street</li><li>Sweifieh</li><li>Fourth Circle</li>
@@ -335,6 +335,11 @@
     const bar = document.getElementById('bar');
     const onScroll = () => bar.classList.toggle('scrolled', scrollY > 8);
     addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+    // Visitors who open the app from here have seen the idea, so the app skips its intro cards.
+    const seen = () => { try { localStorage.setItem('spotlane-intro', 'landing'); } catch (e) {} };
+    document.querySelectorAll('a[href^="app/"]').forEach(a => a.addEventListener('click', seen));
+    document.querySelector('form.search').addEventListener('submit', seen);
   </script>
 </body>
 </html>

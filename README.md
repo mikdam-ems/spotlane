@@ -40,6 +40,8 @@ If it's left empty, feedback is copied to the tester's clipboard.
   - their comments
   - the tester's steps, such as "hold", "paid" or "nav_handoff"
 - The step log never includes location or contact details.
+- **Intro cards** show once per browser, on a first visit that didn't come through the landing page. Add `?onboarding=1` to the app link to show them again for the next tester.
+- **Location** is only requested when the tester taps "Use my location" (or the locate button). Otherwise the app opens on central Amman.
 - **Scenarios** (only shown when the link ends in `?moderator=1`) lets a moderator trigger edge cases on purpose, such as a slot taken at checkout, a declined payment or an expired hold.
 - To send events to an analytics tool (PostHog, a Supabase function…), set `CONFIG.analyticsEndpoint`.
 
