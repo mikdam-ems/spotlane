@@ -631,7 +631,8 @@
       .pop .slots { margin-top: 8px; }
       .pop-foot { margin-top: 10px; } .pop-foot .btn { flex: 1; }
       #cap-lot { overflow: hidden; text-overflow: ellipsis; }
-      .legend { display: none; }
+      .legend { padding: 8px 10px; gap: 5px; font-size: 10.5px; border-radius: 14px; }
+      .legend .route { display: none; }
       .maplibregl-ctrl-bottom-right { bottom: 6px; right: 6px; }
       body:not(.has-pass) .app { padding-bottom: 72px; }
       .cinfo p { display: none; }
@@ -803,9 +804,9 @@
           </div>
         </div>
         <div class="legend glass" aria-label="Map legend">
-          <span class="high"><i></i>High availability</span>
-          <span class="med"><i></i>Medium availability</span>
-          <span class="low"><i></i>Low availability</span>
+          <span class="high"><i></i>Plenty of space</span>
+          <span class="med"><i></i>Filling up</span>
+          <span class="low"><i></i>Almost full</span>
           <span class="route"><i></i>Your route</span>
         </div>
         <div class="ctrl-stack glass">
@@ -1132,7 +1133,7 @@
       return {
         id: b.id, key: b.id, ll: b.ll, name: b.name, short: b.name, kind: b.kind, source: b.source || 'sample',
         addr: [b.street, b.operator].filter(Boolean).join(' · ') || `${KIND[b.kind] || 'Public'} car park`,
-        level, levelLabel: { high: 'High availability', med: 'Medium availability', low: 'Low availability' }[level],
+        level, levelLabel: { high: 'Plenty of space', med: 'Filling up', low: 'Almost full' }[level],
         free, total, band: [Math.max(1, free - 4), Math.min(total, free + 4)],
         price, priceLabel: isFree ? 'Free' : `JD ${price.toFixed(2)}`,
         km: 0, min: 0, floors, floor: fl[0], slot: `${fl[1]}-${pad(5 + Math.floor(r('slot') * 10))}`,
