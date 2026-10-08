@@ -101,6 +101,7 @@
     .field input { cursor: text; }
     .field .chev { width: 14px; height: 14px; color: var(--dim); }
     .when .field { width: 150px; }
+    .when .field:first-child { width: 172px; }                     /* fits "Tomorrow" and "Sat, Oct 10" */
 
     .amen { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px; margin: -2px; }
     .amen::-webkit-scrollbar { display: none; }
@@ -564,7 +565,7 @@
     .dest b { position: absolute; left: 14px; top: -30px; font-size: 11px; font-weight: 700; color: var(--ink); background: #fff; padding: 3px 8px; border-radius: 999px; box-shadow: 0 4px 10px -4px rgba(15,23,42,.3); white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
     .pop.dim { opacity: .35; }
     /* place search */
-    .fields .field.search { position: relative; }
+    .fields .field.search { position: relative; max-width: 460px; }
     .suggest { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 30; padding: 6px; border-radius: 16px; display: grid; gap: 2px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
     .suggest[hidden] { display: none; }
     .suggest button { display: flex; gap: 10px; align-items: flex-start; text-align: left; border: 0; background: none; padding: 9px 10px; border-radius: 10px; color: var(--ink); }
@@ -597,7 +598,7 @@
       .capsule .btn { padding: 0 18px; }
     }
     @media (max-width: 1100px) {
-      .when .field { width: 140px; }
+      .when .field { width: 150px; }
       .hold { display: none; }
     }
 
@@ -784,13 +785,9 @@
             <span><b>Spotlane</b><small>Smart parking finder</small></span>
           </a>
           <div class="fields">
-            <label class="field">
-              <svg class="i"><use href="#i-pin"/></svg>
-              <span class="fl"><small>You are in</small><input id="city" value="Amman, Jordan" autocomplete="off" readonly></span>
-            </label>
             <label class="field search">
               <svg class="i"><use href="#i-search"/></svg>
-              <span class="fl"><small>Street</small><input id="street" value="Zahran St" autocomplete="off" spellcheck="false" placeholder="Search a street or place"></span>
+              <span class="fl"><small>Where are you going?</small><input id="street" value="Zahran St" autocomplete="off" spellcheck="false" placeholder="A place, street or area in Jordan"></span>
               <div class="suggest" id="suggest" role="listbox" aria-label="Places" hidden></div>
             </label>
           </div>
@@ -1261,7 +1258,8 @@
       const d0 = new Date();
       $('#date').innerHTML = Array.from({ length: 7 }, (_, i) => {
         const d = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + i);
-        return `<option>${i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : DOW[d.getDay()]}, ${MON[d.getMonth()]} ${d.getDate()}</option>`;
+        const day = `${MON[d.getMonth()]} ${d.getDate()}`, name = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : DOW[d.getDay()];
+        return `<option value="${name}, ${day}">${i < 2 ? name : `${name}, ${day}`}</option>`;   // short label, full value
       }).join('');
       fillTimes();
     }
