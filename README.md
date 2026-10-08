@@ -5,10 +5,9 @@ The Spotlane parking journey on a **real map of Jordan**, built so drivers can t
 | Path | What it is |
 |---|---|
 | `index.html` | **Live test version**: real map, car parks, GPS, search and routes |
-| `showcase/` | **Design showcase**: the polished concept on a generative Amman map, with an all-of-Jordan zoom |
-| `shared/base.css` | Reset and reduced-motion helpers shared by both |
+| `shared/base.css` | Reset and reduced-motion helpers |
 
-Both are plain HTML/CSS/JS with no build step. Open `index.html` in a browser, or serve the folder.
+It's plain HTML/CSS/JS with no build step. Open `index.html` in a browser, or serve the folder.
 
 | What's real | What's simulated (clearly labelled in the UI) |
 |---|---|
@@ -26,7 +25,7 @@ All services are free and need no API keys. They're listed in `CONFIG` at the to
 Geolocation only works over **https**, so host the repo rather than sending the file:
 
 - **GitHub Pages:** repo → Settings → Pages → Source: *Deploy from a branch* → `main` / root. The app is at
-  `https://mikdam-ems.github.io/spotlane/`, and the showcase at `/showcase/`.
+  `https://mikdam-ems.github.io/spotlane/`.
 - **Netlify:** drag the repo folder onto app.netlify.com/drop.
 
 Before sharing, set `CONFIG.feedbackEmail` (top of the script in `index.html`) to the address that should receive feedback.

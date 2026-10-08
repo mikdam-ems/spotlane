@@ -326,7 +326,6 @@
     .sheet.on { transform: none; visibility: visible; transition: transform .45s var(--ease); }
     body.sheet-open .capsule, body.sheet-open .ctrls, body.sheet-open .pop { opacity: 0; pointer-events: none; }
     body.sheet-open .toast, body.sheet-open .notice { left: calc(50% - 12px); }
-    body.sheet-open .ems-back { opacity: 0; pointer-events: none; }
     .sh-head { padding: 14px 16px 12px; border-bottom: 1px solid var(--line); display: grid; gap: 12px; }
     .sh-top { display: flex; align-items: center; gap: 10px; }
     .sh-top > div { flex: 1; min-width: 0; }
@@ -872,8 +871,6 @@
     <section class="sheet glass" id="sheet" aria-label="Booking" inert></section>
     <div class="scrim" id="scrim"></div>
   </main>
-
-  <a class="ems-back" href="showcase/">Design showcase →</a>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 

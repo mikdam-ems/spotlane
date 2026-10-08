@@ -4,7 +4,6 @@ A smart parking finder for Jordan, currently in the **user-testing stage** (Stag
 
 ## Layout
 - `index.html` — live test build. MapLibre + OpenFreeMap tiles, OpenStreetMap car parks via Overpass, Photon search, OSRM routes, and hand-off to Google Maps / Waze / Apple Maps. All external services are listed in `CONFIG` at the top of the script.
-- `showcase/index.html` — design concept on a generative Amman map. Keep it visually in sync with the live build.
 - `shared/base.css` — reset and reduced-motion helpers.
 
 ## Rules
