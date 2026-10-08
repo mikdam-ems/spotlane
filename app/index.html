@@ -355,6 +355,16 @@
     .sec { display: grid; gap: 10px; }
     .sec > h3 { margin: 0; font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--mute); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
     .sec > h3 em { font-style: normal; text-transform: none; letter-spacing: 0; color: var(--indigo); font-weight: 700; }
+    .pick { border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+    .pick.open { border-color: #C7D2FE; }
+    .pick-row { display: flex; align-items: center; gap: 12px; padding: 12px; }
+    .pick-row > div { flex: 1; min-width: 0; display: grid; }
+    .pick-row small { font-size: 11px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: .06em; }
+    .pick-row b { font-size: 14.5px; }
+    .pick-row span:not(.ic-box) { font-size: 12px; color: var(--mute); }
+    .pick-row .btn.text { height: 36px; padding: 0 10px; }
+    .pick-body { padding: 0 12px 12px; display: grid; gap: 12px; }
+    .pick-row .ic-box { background: var(--indigo-soft); color: var(--indigo); }
     .lot-line { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
     .lot-line > div { flex: 1; min-width: 0; }
     .lot-line b { font-size: 14px; }
@@ -1400,9 +1410,12 @@
     const cleanPlate = v => v.replace(/[\s-]/g, '').toUpperCase();
     const validPlate = v => /^[A-Z0-9]{2,8}$/.test(cleanPlate(v));
 
+    const PLATE_KEY = 'spotlane-plate';                              // kept on this device only, never sent to track()
+    const savedPlate = () => { try { return JSON.parse(localStorage.getItem(PLATE_KEY)) || {}; } catch (e) { return {}; } };
     const fresh = () => ({
       lot: null, lotObj: null, floor: '', slot: '', status: 'idle', view: null, navigating: false,
-      arrive: null, hours: 3, plate: '', region: 'JO', size: 'std', ev: false, modifying: false,
+      arrive: null, hours: 2, plate: savedPlate().plate || '', region: savedPlate().region || 'JO', size: 'std', ev: false, modifying: false,
+      showBay: false, showOpts: false,
       contact: '', pay: 'card', cnum: '4242 4242 4242 4242', cexp: '08 / 29', ccvc: '123', paid: 0, id: '', error: null, confirmCancel: false,
       arrived: false, gate: 'idle', showQr: false, reassigned: false,
       elapsed: 0, ext: 0, extPaid: 0, extSel: 60, lateFee: 0, kwh: 0, charging: false, lowWarned: false,
@@ -1576,6 +1589,8 @@
         };
         const rng = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
         const due = total() - (S.modifying ? S.paid : 0);
+        const PLATE_HINT = 'The barrier reads your plate. No ticket needed.';
+        const plateHint = S.plate && savedPlate().plate === S.plate ? 'Saved on this phone. The barrier reads it, so no ticket is needed.' : PLATE_HINT;
         return {
           title: S.modifying ? 'Modify booking' : 'Reserve your spot',
           sub: `${l.short} · ${l.priceLabel}/hr`,
@@ -1589,21 +1604,29 @@
               <div class="stepper"><button type="button" data-hrs="-1" aria-label="One hour less" ${S.hours <= 1 ? 'disabled' : ''}>${ico('minus')}</button>
                 <div><b class="num">${S.hours} hour${S.hours > 1 ? 's' : ''}</b><small class="num">${fmtT(S.arrive)} → ${fmtT(S.arrive + S.hours * 60)}</small></div>
                 <button type="button" data-hrs="1" aria-label="One hour more" ${S.hours >= 12 ? 'disabled' : ''}>${ico('plus')}</button></div></div>
-            <div class="sec"><h3>Choose your slot <em>${S.floor} · ${S.slot}</em></h3>
-              <div class="seg" role="group" aria-label="Floor" style="grid-template-columns:repeat(${l.floors.length},1fr)">${l.floors.map(f => `<button type="button" data-floor="${f[0]}" aria-pressed="${f[0] === S.floor}">${f[0]}</button>`).join('')}</div>
-              <div class="slot-map"><div class="slot-grid">${rng(1, 8).map(slotBtn).join('')}</div><div class="aisle">AISLE</div><div class="slot-grid">${rng(9, 16).map(slotBtn).join('')}</div></div>
-              <div class="slot-legend"><span><i></i>Free</span><span class="t"><i></i>Taken</span><span class="s"><i></i>Yours</span><span>${ico('access')}Accessible</span>${l.kw ? `<span>${ico('bolt')}EV charger</span>` : ''}</div></div>
-            <div class="sec"><h3>Your vehicle</h3>
-              <div class="fld"><label for="plate">Licence plate</label>
+            <div class="sec"><h3>Your plate</h3>
+              <div class="fld">
                 <div class="plate-row"><select class="inp" id="region" aria-label="Plate country">${['JO', 'SA', 'AE', 'KW', 'IQ'].map(r => `<option ${r === S.region ? 'selected' : ''}>${r}</option>`).join('')}</select>
-                  <input class="inp plate" id="plate" value="${esc(S.plate)}" placeholder="12-34567" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="plate-msg"></div>
-                <span class="hint" id="plate-msg">The gate reads your plate — no ticket, no app needed at entry.</span></div>
-              <div class="seg" role="group" aria-label="Vehicle size" style="grid-template-columns:1fr 1fr"><button type="button" data-size="std" aria-pressed="${S.size === 'std'}">Standard car</button><button type="button" data-size="long" aria-pressed="${S.size === 'long'}">Longer than 3.5m</button></div>
-              ${S.size === 'long' ? (l.amen.includes('long')
-                ? `<div class="note">${ico('check')}<span>We'll keep an XL bay (up to 5.4 m) for you at no extra cost.</span></div>`
-                : `<div class="alert amber"><div class="alert-top">${ico('alert')}<div><b>No XL bays here</b>${esc(l.short)} has standard bays only. Multi-storey car parks usually fit longer vehicles.</div></div></div>`) : ''}
+                  <input class="inp plate" id="plate" value="${esc(S.plate)}" placeholder="12-34567" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Licence plate" aria-describedby="plate-msg"></div>
+                <span class="hint" id="plate-msg">${plateHint}</span></div></div>
+            <div class="pick ${S.showBay ? 'open' : ''}">
+              <div class="pick-row"><span class="ic-box">${ico('pin')}</span><div><small>Your bay</small><b>${S.floor} · ${S.slot}</b><span>${S.bayPicked ? 'Chosen by you' : 'Picked for you: free when you arrive'}</span></div>
+                <button type="button" class="btn text" data-toggle="bay" aria-expanded="${S.showBay}">${S.showBay ? 'Done' : 'Change'}</button></div>
+              ${S.showBay ? `<div class="pick-body">
+                <div class="seg" role="group" aria-label="Floor" style="grid-template-columns:repeat(${l.floors.length},1fr)">${l.floors.map(f => `<button type="button" data-floor="${f[0]}" aria-pressed="${f[0] === S.floor}">${f[0]}</button>`).join('')}</div>
+                <div class="slot-map"><div class="slot-grid">${rng(1, 8).map(slotBtn).join('')}</div><div class="aisle">AISLE</div><div class="slot-grid">${rng(9, 16).map(slotBtn).join('')}</div></div>
+                <div class="slot-legend"><span><i></i>Free</span><span class="t"><i></i>Taken</span><span class="s"><i></i>Yours</span><span>${ico('access')}Accessible</span>${l.kw ? `<span>${ico('bolt')}EV charger</span>` : ''}</div></div>` : ''}
             </div>
-            ${l.kw ? `<label class="switch"><input type="checkbox" id="evres" ${S.ev ? 'checked' : ''}><span class="ic-box">${ico('bolt')}</span><span><b>Charge while I'm parked</b><span class="s">${l.kw} kW · JD 0.20/kWh, billed after your session</span></span><span class="tg"></span></label>` : ''}
+            <div class="pick ${S.showOpts ? 'open' : ''}">
+              <div class="pick-row"><span class="ic-box">${ico('van')}</span><div><small>Options</small><b>${S.size === 'long' ? 'Longer car (over 3.5 m)' : 'Standard car'}${l.kw ? ` · ${S.ev ? 'Charging' : 'No charging'}` : ''}</b></div>
+                <button type="button" class="btn text" data-toggle="opts" aria-expanded="${S.showOpts}">${S.showOpts ? 'Done' : 'Change'}</button></div>
+              ${S.showOpts ? `<div class="pick-body">
+                <div class="seg" role="group" aria-label="Vehicle size" style="grid-template-columns:1fr 1fr"><button type="button" data-size="std" aria-pressed="${S.size === 'std'}">Standard car</button><button type="button" data-size="long" aria-pressed="${S.size === 'long'}">Longer than 3.5 m</button></div>
+                ${l.kw ? `<label class="switch"><input type="checkbox" id="evres" ${S.ev ? 'checked' : ''}><span class="ic-box">${ico('bolt')}</span><span><b>Charge while I'm parked</b><span class="s">${l.kw} kW · JD 0.20/kWh, billed after your session</span></span><span class="tg"></span></label>` : ''}</div>` : ''}
+            </div>
+            ${S.size === 'long' ? (l.amen.includes('long')
+              ? `<div class="note">${ico('check')}<span>We'll keep an XL bay (up to 5.4 m) for you at no extra cost.</span></div>`
+              : `<div class="alert amber"><div class="alert-top">${ico('alert')}<div><b>No XL bays here</b>${esc(l.short)} has standard bays only. Multi-storey car parks usually fit longer vehicles.</div></div></div>`) : ''}
             ${billRows(due)}
             <div class="note">${ico('clock')}<span>Free cancellation until <b>${fmtT(S.arrive - 15)}</b>. Running late? Your slot stays yours until <b>${fmtT(S.arrive + 15)}</b>.</span></div>`,
           foot: `<button type="button" class="btn primary" data-next>Continue to checkout · <span class="num">${money(Math.abs(due))}</span></button>
@@ -1612,19 +1635,20 @@
             on(root, '[data-arr]', 'click', e => { S.arrive = +e.currentTarget.dataset.arr; rerender(); });
             on(root, '[data-hrs]', 'click', e => { S.hours = Math.min(12, Math.max(1, S.hours + +e.currentTarget.dataset.hrs)); rerender(); });
             on(root, '[data-floor]', 'click', e => {
-              S.floor = e.currentTarget.dataset.floor;
+              S.floor = e.currentTarget.dataset.floor; S.bayPicked = true;
               const r = l.floors.find(f => f[0] === S.floor)[1];
               if (S.slot[0] !== r) S.slot = nextFree(S.lot, r, 8) || S.slot;
               rerender(); select(S.lot);
             });
-            on(root, '[data-slot]', 'click', e => { S.slot = e.currentTarget.dataset.slot; rerender(); select(S.lot); });
+            on(root, '[data-slot]', 'click', e => { S.slot = e.currentTarget.dataset.slot; S.bayPicked = true; rerender(); select(S.lot); });
+            on(root, '[data-toggle]', 'click', e => { const k = e.currentTarget.dataset.toggle === 'bay' ? 'showBay' : 'showOpts'; S[k] = !S[k]; if (S[k]) track('reserve_change', { what: e.currentTarget.dataset.toggle }); rerender(); });
             on(root, '[data-size]', 'click', e => { S.size = e.currentTarget.dataset.size; rerender(); });
             on(root, '#region', 'change', e => { S.region = e.target.value; });
             on(root, '#evres', 'change', e => { S.ev = e.target.checked; rerender(); });
             on(root, '#plate', 'input', e => {
               S.plate = e.target.value.toUpperCase(); e.target.value = S.plate;
               e.target.classList.remove('bad'); const m = $('#plate-msg', root); m.classList.remove('bad');
-              m.textContent = 'The gate reads your plate — no ticket, no app needed at entry.';
+              m.textContent = PLATE_HINT;
             });
             $('[data-next]', root).onclick = () => {
               if (!validPlate(S.plate)) {
@@ -1634,6 +1658,7 @@
                 i.focus(); i.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
                 return;
               }
+              try { localStorage.setItem(PLATE_KEY, JSON.stringify({ plate: S.plate, region: S.region })); } catch (e) {}
               openSheet('checkout');
             };
           }
@@ -1687,7 +1712,7 @@
             on(root, '[data-err]', 'click', e => {
               const a = e.currentTarget.dataset.err, err = S.error; S.error = null;
               if (a === 'alt') { S.slot = err.alt; toast(`Switched to ${err.alt} · same floor, same price`); select(S.lot); rerender(); }
-              else if (a === 'pick') openSheet('details');
+              else if (a === 'pick') { S.showBay = true; openSheet('details'); }
               else if (a === 'express') { S.pay = 'express'; rerender(); }
               else if (a === 'card') { rerender(); $('#cnum', sheet)?.focus(); }
               else if (a === 'rehold') { holdLeft = HOLD; renderCapsule(); toast(`${S.slot} held again for 15 min`, 'timer'); rerender(); }
@@ -1941,7 +1966,7 @@
       if (S.status === 'done') S = fresh();
       if (id !== S.lot || S.status === 'idle') {
         const l = LOTS[id];
-        Object.assign(S, { lot: id, lotObj: l, floor: l.floor, slot: l.slot, error: null, ev: false, status: 'held', arrive: null });   // EV charging is opt-in: it adds a cost
+        Object.assign(S, { lot: id, lotObj: l, floor: l.floor, slot: l.slot, error: null, ev: false, status: 'held', arrive: null, showBay: false, showOpts: false, bayPicked: false });   // EV charging is opt-in: it adds a cost
         holdLeft = HOLD;
         track('hold', { lot: id, level: l.level, source: l.source });
       }
