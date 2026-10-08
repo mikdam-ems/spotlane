@@ -1278,7 +1278,7 @@
 
     const fresh = () => ({
       lot: null, lotObj: null, floor: '', slot: '', status: 'idle', view: null, navigating: false,
-      arrive: null, hours: 3, plate: '', region: 'JO', size: 'std', ev: true, modifying: false,
+      arrive: null, hours: 3, plate: '', region: 'JO', size: 'std', ev: false, modifying: false,
       contact: '', pay: 'card', cnum: '4242 4242 4242 4242', cexp: '08 / 29', ccvc: '123', paid: 0, id: '', error: null, confirmCancel: false,
       arrived: false, gate: 'idle', showQr: false, reassigned: false,
       elapsed: 0, ext: 0, extPaid: 0, extSel: 60, lateFee: 0, kwh: 0, charging: false, lowWarned: false,
@@ -1817,7 +1817,7 @@
       if (S.status === 'done') S = fresh();
       if (id !== S.lot || S.status === 'idle') {
         const l = LOTS[id];
-        Object.assign(S, { lot: id, lotObj: l, floor: l.floor, slot: l.slot, error: null, ev: l.kw > 0, status: 'held', arrive: null });
+        Object.assign(S, { lot: id, lotObj: l, floor: l.floor, slot: l.slot, error: null, ev: false, status: 'held', arrive: null });   // EV charging is opt-in: it adds a cost
         holdLeft = HOLD;
         track('hold', { lot: id, level: l.level, source: l.source });
       }
