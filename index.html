@@ -812,11 +812,11 @@
           </div>
         </div>
         <div class="amen" role="group" aria-label="Amenities">
-          <label class="pill"><input type="checkbox" value="disabled" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Disabled parking ♿</span></label>
-          <label class="pill"><input type="checkbox" value="ev" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>EV charging station ⚡</span></label>
-          <label class="pill"><input type="checkbox" value="long" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Car longer than 3.5m 🚐</span></label>
-          <label class="pill"><input type="checkbox" value="pr" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Park and Ride 🚇</span></label>
-          <label class="pill"><input type="checkbox" value="wash" checked><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Park and wash 🧼</span></label>
+          <label class="pill"><input type="checkbox" value="disabled"><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Disabled parking ♿</span></label>
+          <label class="pill"><input type="checkbox" value="ev"><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>EV charging station ⚡</span></label>
+          <label class="pill"><input type="checkbox" value="long"><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Car longer than 3.5m 🚐</span></label>
+          <label class="pill"><input type="checkbox" value="pr"><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Park and Ride 🚇</span></label>
+          <label class="pill"><input type="checkbox" value="wash"><span><span class="box"><svg class="i"><use href="#i-check"/></svg></span>Park and wash 🧼</span></label>
         </div>
       </header>
 
@@ -1981,10 +1981,10 @@
     // Amenity pills: all (or none) ticked = no filter; otherwise show lots with any ticked amenity
     function applyFilter() {
       const boxes = $$('.amen input'), want = boxes.filter(i => i.checked).map(i => i.value);
-      const all = !want.length || want.length === boxes.length;
+      const all = !want.length;                                      // no filter ticked = show everything
       let n = 0;
       Object.values(LOTS).forEach(l => {
-        const ok = !emptyScn && (all || want.some(a => l.amen.includes(a)));
+        const ok = !emptyScn && want.every(a => l.amen.includes(a)); // each ticked filter narrows the list
         l.visible = ok;
         const card = $(`.lot[data-id="${CSS.escape(l.id)}"]`); if (card) card.hidden = !ok;
         if (pins[l.id]) pins[l.id].hidden = !ok;
@@ -2000,7 +2000,7 @@
       const f = b.dataset.fix; emptyScn = false;
       emptyReason("Everything nearby is full or doesn't match your filters for this time.");
       if (f === 'time') { fillTimes(toMin($('#time').value) + 60); ctx(); }
-      if (f === 'clear') $$('.amen input').forEach(i => i.checked = true);
+      if (f === 'clear') $$('.amen input').forEach(i => i.checked = false);
       if (f === 'radius') { CONFIG.searchRadius = Math.min(6000, CONFIG.searchRadius * 2); return loadLots(center).then(() => toast(`Search widened to ${(CONFIG.searchRadius / 1000).toFixed(1)} km`)); }
       const n = applyFilter();
       toast(f === 'time' ? `Showing lots for ${$('#time').value} · ${n} found` : `Filters cleared · ${n} lots found`);
@@ -2137,7 +2137,8 @@
     });
     $$('.amen input').forEach(i => i.addEventListener('change', () => {
       const n = applyFilter(); track('filter', { amenity: i.value, on: i.checked });
-      toast(n ? `${n} lot${n > 1 ? 's' : ''} match your amenities` : 'No lots match these amenities', n ? 'check' : 'alert');
+      const any = $$('.amen input').some(b => b.checked);
+      toast(!any ? `Filters off · ${n} lot${n > 1 ? 's' : ''}` : n ? `${n} lot${n > 1 ? 's' : ''} ha${n > 1 ? 've' : 's'} everything you ticked` : 'No lots have all of these', n ? 'check' : 'alert');
     }));
 
     function ctx() { $('#ctx').textContent = `Near ${centerLabel === 'Your location' ? 'you' : centerLabel} · ${isNow() ? 'Now' : `${$('#date').value}, ${$('#time').value}`}`; }
