@@ -1,0 +1,12 @@
+# Netlify: static site, no build step. Publishes the repo root (index.html = live test build, /showcase = design concept).
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # the app asks for the tester's location; keep it allowed for this site only
+    Permissions-Policy = "geolocation=(self)"

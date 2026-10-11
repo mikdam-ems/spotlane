@@ -23,11 +23,12 @@ All services are free and need no API keys. They're listed in `CONFIG` at the to
 
 ## Share it with testers
 
-Geolocation only works over **https**, so host the repo rather than sending the file:
+Geolocation only works over **https**, so host the site rather than sending the file. It's set up for **Netlify** (`netlify.toml`: no build step, publishes the repo root):
 
-- **GitHub Pages:** repo → Settings → Pages → Source: *Deploy from a branch* → `main` / root. The app is at
-  `https://mikdam-ems.github.io/spotlane/`, and the showcase at `/showcase/`.
-- **Netlify:** drag the repo folder onto app.netlify.com/drop.
+- **Auto-deploy from GitHub (recommended):** app.netlify.com → *Add new site* → *Import an existing project* → GitHub → `spotlane`. Leave the build command empty and set the publish directory to `.`. Every push to `main` then redeploys, and every other branch gets its own preview link.
+- **Quick one-off:** drag the project folder onto app.netlify.com/drop.
+
+The live test build is at the site root, and the design showcase at `/showcase/`.
 
 Before sharing, set `CONFIG.feedbackEmail` (top of the script in `index.html`) to the address that should receive feedback.
 If it's left empty, feedback is copied to the tester's clipboard.
